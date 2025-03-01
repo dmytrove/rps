@@ -67,22 +67,33 @@ class Item {
         ctx.translate(this.x, this.y);
         ctx.rotate(this.rotation);
         
-        ctx.font = `${this.size * 2}px Arial`;
+        // Draw using Font Awesome icons instead of emojis
+        ctx.font = `${this.size * 1.5}px "Font Awesome 6 Free"`; // Smaller multiplier since FA icons are larger
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
+        ctx.fillStyle = this.getColor();
         
         switch (this.type) {
             case 'rock':
-                ctx.fillText('🪨', 0, 0);
+                ctx.fillText('\uf3ff', 0, 0); // fa-gem
                 break;
             case 'paper':
-                ctx.fillText('📃', 0, 0);
+                ctx.fillText('\uf15c', 0, 0); // fa-file
                 break;
             case 'scissors':
-                ctx.fillText('✂️', 0, 0);
+                ctx.fillText('\uf0c4', 0, 0); // fa-scissors
                 break;
         }
         ctx.restore();
+    }
+
+    getColor() {
+        switch (this.type) {
+            case 'rock': return '#ef4444';
+            case 'paper': return '#3b82f6';
+            case 'scissors': return '#22c55e';
+            default: return 'white';
+        }
     }
 
     collidesWith(other) {
@@ -399,7 +410,12 @@ class Game {
             }
         });
 
-        this.initialDistribution = `🪨${initialCounts.rock} 📃${initialCounts.paper} ✂️${initialCounts.scissors}`;
+        // Use Font Awesome icons for initial distribution
+        this.initialDistribution = `
+            <i class="fas fa-gem" style="color: #ef4444"></i>${initialCounts.rock}
+            <i class="fas fa-file" style="color: #3b82f6"></i>${initialCounts.paper}
+            <i class="fas fa-scissors" style="color: #22c55e"></i>${initialCounts.scissors}
+        `;
     }
 
     addRoundToHistory(winner) {
@@ -417,9 +433,16 @@ class Game {
         const tbody = document.getElementById('historyTableBody');
         const row = document.createElement('tr');
         row.className = 'border-bottom border-secondary';
+        
+        // Use Font Awesome icons with colors matching the game items
+        const winnerIcon = winner === 'rock' ? 'fa-gem' : winner === 'paper' ? 'fa-file' : 'fa-scissors';
+        const winnerColor = winner === 'rock' ? '#ef4444' : winner === 'paper' ? '#3b82f6' : '#22c55e';
+        
         row.innerHTML = `
             <td>${time}</td>
-            <td class="text-center">${winner === 'rock' ? '🪨' : winner === 'paper' ? '📃' : '✂️'}</td>
+            <td class="text-center">
+                <i class="fas ${winnerIcon}" style="color: ${winnerColor}"></i>
+            </td>
             <td class="text-center">${duration}s</td>
             <td class="text-end">${this.initialDistribution}</td>
         `;
@@ -452,9 +475,14 @@ class Game {
             document.body.appendChild(notification);
         }
 
-        // Set winner message with emoji
-        const emoji = winner === 'rock' ? '🪨' : winner === 'paper' ? '📃' : '✂️';
-        notification.textContent = `${emoji} ${winner.charAt(0).toUpperCase() + winner.slice(1)} wins! ${emoji}`;
+        // Set winner message with Font Awesome icon
+        const icon = winner === 'rock' ? 'fa-gem' : winner === 'paper' ? 'fa-file' : 'fa-scissors';
+        const color = winner === 'rock' ? '#ef4444' : winner === 'paper' ? '#3b82f6' : '#22c55e';
+        notification.innerHTML = `
+            <i class="fas ${icon}" style="color: ${color}"></i>
+            ${winner.charAt(0).toUpperCase() + winner.slice(1)} wins!
+            <i class="fas ${icon}" style="color: ${color}"></i>
+        `;
         
         // Show notification
         notification.style.opacity = '1';
