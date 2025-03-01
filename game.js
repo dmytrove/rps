@@ -1,3 +1,9 @@
+const TYPES = {
+    ROCK: '🗿',
+    PAPER: '📰',
+    SCISSORS: '✂️'
+};
+
 class Glow {
     constructor(x, y, fromType, toType) {
         this.x = x;
@@ -67,23 +73,12 @@ class Item {
         ctx.translate(this.x, this.y);
         ctx.rotate(this.rotation);
         
-        // Draw using Font Awesome icons instead of emojis
-        ctx.font = `${this.size * 1.5}px "Font Awesome 6 Free"`; // Smaller multiplier since FA icons are larger
+        // Draw using emojis instead of Font Awesome icons
+        ctx.font = `${this.size}px Arial`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = this.getColor();
+        ctx.fillText(TYPES[this.type], 0, 0);
         
-        switch (this.type) {
-            case 'rock':
-                ctx.fillText('\uf3ff', 0, 0); // fa-gem
-                break;
-            case 'paper':
-                ctx.fillText('\uf15c', 0, 0); // fa-file
-                break;
-            case 'scissors':
-                ctx.fillText('\uf0c4', 0, 0); // fa-scissors
-                break;
-        }
         ctx.restore();
     }
 

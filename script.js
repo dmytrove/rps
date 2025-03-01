@@ -1,6 +1,6 @@
 const choices = {
-    rock: '🪨',
-    paper: '📄',
+    rock: '🗿',
+    paper: '📰',
     scissors: '✂️'
 };
 
