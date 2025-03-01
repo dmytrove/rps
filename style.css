@@ -1,0 +1,53 @@
+body {
+    background-color: black;
+}
+
+#gameCanvas {
+    display: block;
+}
+
+/* Override Bootstrap dark table styles for better visibility */
+.table-dark {
+    --bs-table-bg: transparent;
+}
+
+/* Common panel styles */
+#controlsPanel,
+#graphContainer,
+#historyContainer {
+    height: 33vh;
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+}
+
+#controlsPanel:hover,
+#graphContainer:hover,
+#historyContainer:hover {
+    opacity: 1;
+}
+
+#controlsPanel .card-body,
+#graphContainer .card-body,
+#historyContainer .card-body {
+    height: 100%;
+    overflow: auto;
+}
+
+#controlsPanel.hidden,
+#graphContainer.hidden,
+#historyContainer.hidden {
+    display: none !important;
+}
+
+#historyContainer {
+    overflow-y: auto;
+}
+
+.form-range {
+    max-width: 150px;
+}
+
+/* Ensure chart takes full height of its container */
+#distributionGraph {
+    height: 100% !important;
+}
