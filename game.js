@@ -623,3 +623,80 @@ class Game {
 
 // Start the game when the page loads
 window.onload = () => new Game();
+
+let sceneManager;
+let animationId;
+let lastTime = 0;
+
+function initGame() {
+    sceneManager = new SceneManager();
+    setupInitialItems();
+    animate();
+}
+
+function setupInitialItems() {
+    const itemCount = parseInt(document.getElementById('itemCount').value);
+    const types = ['rock', 'paper', 'scissors'];
+    
+    for (let i = 0; i < itemCount; i++) {
+        const type = types[Math.floor(Math.random() * types.length)];
+        const position = new THREE.Vector3(
+            (Math.random() - 0.5) * 160,
+            (Math.random() - 0.5) * 90,
+            0
+        );
+        sceneManager.createItem(type, position);
+    }
+}
+
+function animate(currentTime = 0) {
+    animationId = requestAnimationFrame(animate);
+    
+    const delta = (currentTime - lastTime) / 1000;
+    lastTime = currentTime;
+    
+    const speed = parseFloat(document.getElementById('speedMultiplier').value);
+    sceneManager.updatePositions(speed);
+    
+    const collision = sceneManager.checkCollisions();
+    if (collision) {
+        handleCollision(collision.item1, collision.item2);
+    }
+    
+    sceneManager.render();
+    updateStats();
+}
+
+function handleCollision(item1, item2) {
+    const winner = determineWinner(item1.userData.type, item2.userData.type);
+    if (winner) {
+        const loser = winner === item1 ? item2 : item1;
+        const newType = winner.userData.type;
+        const position = loser.position.clone();
+        
+        sceneManager.removeItem(loser);
+        sceneManager.createItem(newType, position);
+    }
+}
+
+function determineWinner(type1, type2) {
+    if (type1 === type2) return null;
+    
+    if ((type1 === 'rock' && type2 === 'scissors') ||
+        (type1 === 'paper' && type2 === 'rock') ||
+        (type1 === 'scissors' && type2 === 'paper')) {
+        return item1;
+    }
+    return item2;
+}
+
+// Initialize game when window loads
+window.addEventListener('load', initGame);
+
+// Update restart button handler
+document.getElementById('restartBtn').addEventListener('click', () => {
+    cancelAnimationFrame(animationId);
+    sceneManager.clearScene();
+    setupInitialItems();
+    animate();
+});
