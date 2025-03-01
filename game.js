@@ -405,11 +405,11 @@ class Game {
             }
         });
 
-        // Use Font Awesome icons for initial distribution
+        // Use emojis for initial distribution
         this.initialDistribution = `
-            <i class="fas fa-gem" style="color: #ef4444"></i>${initialCounts.rock}
-            <i class="fas fa-file" style="color: #3b82f6"></i>${initialCounts.paper}
-            <i class="fas fa-scissors" style="color: #22c55e"></i>${initialCounts.scissors}
+            ${TYPES.ROCK}${initialCounts.rock}
+            ${TYPES.PAPER}${initialCounts.paper}
+            ${TYPES.SCISSORS}${initialCounts.scissors}
         `;
     }
 
@@ -429,14 +429,13 @@ class Game {
         const row = document.createElement('tr');
         row.className = 'border-bottom border-secondary';
         
-        // Use Font Awesome icons with colors matching the game items
-        const winnerIcon = winner === 'rock' ? 'fa-gem' : winner === 'paper' ? 'fa-file' : 'fa-scissors';
-        const winnerColor = winner === 'rock' ? '#ef4444' : winner === 'paper' ? '#3b82f6' : '#22c55e';
+        // Use emojis matching the game items
+        const winnerEmoji = TYPES[winner.toUpperCase()];
         
         row.innerHTML = `
             <td>${time}</td>
             <td class="text-center">
-                <i class="fas ${winnerIcon}" style="color: ${winnerColor}"></i>
+                ${winnerEmoji}
             </td>
             <td class="text-center">${duration}s</td>
             <td class="text-end">${this.initialDistribution}</td>
@@ -470,13 +469,12 @@ class Game {
             document.body.appendChild(notification);
         }
 
-        // Set winner message with Font Awesome icon
-        const icon = winner === 'rock' ? 'fa-gem' : winner === 'paper' ? 'fa-file' : 'fa-scissors';
-        const color = winner === 'rock' ? '#ef4444' : winner === 'paper' ? '#3b82f6' : '#22c55e';
+        // Set winner message with emoji
+        const emoji = TYPES[winner.toUpperCase()];
         notification.innerHTML = `
-            <i class="fas ${icon}" style="color: ${color}"></i>
+            ${emoji}
             ${winner.charAt(0).toUpperCase() + winner.slice(1)} wins!
-            <i class="fas ${icon}" style="color: ${color}"></i>
+            ${emoji}
         `;
         
         // Show notification
