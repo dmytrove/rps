@@ -1,6 +1,22 @@
 /* Global Styles */
 :root {
     --vh: 1vh;
+    /* Standardized breakpoints */
+    --breakpoint-xs: 0;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --breakpoint-xxl: 1400px;
+}
+
+html {
+    box-sizing: border-box;
+    height: 100%;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
 }
 
 body {
@@ -13,6 +29,9 @@ body {
     touch-action: manipulation; /* Improve touch response */
     height: 100vh; /* Fallback */
     height: calc(var(--vh, 1vh) * 100); /* Use --vh for iOS Safari */
+    width: 100%;
+    position: fixed; /* Prevent bouncing/scrolling on mobile */
+    overflow: hidden;
 }
 
 #gameCanvas {
@@ -25,6 +44,7 @@ body {
     width: 100vw;
     height: 100vh; /* Fallback */
     height: calc(var(--vh, 1vh) * 100); /* Use --vh for iOS Safari */
+    touch-action: none; /* Prevent default touch actions */
 }
 
 /* Control Buttons */
@@ -1651,5 +1671,114 @@ html, body {
     
     .variations-cards-column .variation-cards-grid {
         grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    }
+}
+
+/* Orientation-specific styles */
+@media screen and (orientation: portrait) {
+    /* Portrait mode styles */
+    .control-buttons {
+        padding: 1rem;
+    }
+    
+    .modal-dialog.mobile-friendly-modal {
+        margin: 10px auto;
+        max-width: 95%;
+    }
+    
+    .variations-layout {
+        flex-direction: column;
+    }
+    
+    .variations-cards-column,
+    .variations-rules-column {
+        width: 100%;
+    }
+}
+
+@media screen and (orientation: landscape) and (max-height: 500px) {
+    /* Landscape mode on small height screens (e.g. phones) */
+    .control-buttons {
+        padding: 0.5rem;
+    }
+    
+    .control-btn {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .control-btn i {
+        font-size: 1rem;
+    }
+    
+    .modal-dialog.mobile-friendly-modal {
+        margin: 5px auto;
+        max-width: 90%;
+    }
+    
+    .modal-body {
+        padding: 0.75rem;
+    }
+    
+    .nav-tabs .nav-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 14px;
+    }
+    
+    /* Show the rules and cards side by side but with limited height */
+    .variations-layout {
+        flex-direction: row;
+        max-height: 250px;
+    }
+    
+    .variations-cards-column {
+        width: 40%;
+        max-height: 250px;
+        overflow-y: auto;
+    }
+    
+    .variations-rules-column {
+        width: 60%;
+    }
+    
+    .rules-graph-container {
+        max-height: 230px;
+    }
+}
+
+/* Notch handling for iPhone X and similar devices */
+@supports (padding: max(0px)) {
+    .modal-dialog.mobile-friendly-modal {
+        padding-left: max(10px, env(safe-area-inset-left));
+        padding-right: max(10px, env(safe-area-inset-right));
+    }
+    
+    .control-buttons {
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+    
+    body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+/* Small height screens in any orientation */
+@media screen and (max-height: 400px) {
+    .control-btn {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .modal-dialog.mobile-friendly-modal {
+        margin: 2px auto;
+    }
+    
+    .modal-body {
+        max-height: 250px !important;
+    }
+    
+    .modal-header, .modal-footer {
+        padding: 0.5rem;
     }
 }

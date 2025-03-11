@@ -16,52 +16,82 @@ window.defaultGameConfig = defaultConfig;
 
 /**
  * Initialize the game with proper error handling
+ * @param {boolean} skipAutoStart - Whether to skip auto-starting the game
+ * @returns {Promise<Game|null>} The game instance or null if initialization failed
  */
-function initializeGame() {
+async function initializeGame(skipAutoStart = true) {
     try {
+        console.log('Initializing game...');
+        
         // Clear existing game instance if any
         if (window.gameInstance) {
             console.log('Cleaning up existing game instance');
+            
+            // Properly clean up existing instance if possible
+            if (typeof window.gameInstance.destroy === 'function') {
+                window.gameInstance.destroy();
+            }
+            
             window.gameInstance = null;
         }
         
-        // Create game instance without automatically calling resize/adjustForScreenSize
-        window.gameInstance = new Game(true); // Pass true to skip auto-start
+        console.log('Creating new Game instance');
         
-        // Manually initialize the canvas size
-        if (window.gameInstance.canvas) {
-            const dpr = window.devicePixelRatio || 1;
-            window.gameInstance.canvas.width = window.innerWidth * dpr;
-            window.gameInstance.canvas.height = window.innerHeight * dpr;
-            window.gameInstance.canvas.style.width = window.innerWidth + 'px';
-            window.gameInstance.canvas.style.height = window.innerHeight + 'px';
+        // Create game instance
+        const game = new Game(skipAutoStart);
+        
+        // Allow time for DOM elements to be fully ready
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        console.log('Initializing game with initializeGame method');
+        
+        // Initialize using the proper method
+        if (typeof game.initializeGame === 'function') {
+            const success = game.initializeGame();
             
-            // Scale for high DPI displays
-            if (window.gameInstance.ctx) {
-                window.gameInstance.ctx.scale(dpr, dpr);
+            if (success) {
+                console.log('Game initialized successfully!');
+                return game;
+            } else {
+                console.error('Game initialization returned false');
+                throw new Error('Game initialization failed');
             }
+        } else {
+            console.warn('initializeGame method not found on Game instance, using fallback');
+            
+            // Use traditional initialization as fallback
+            game.resize();
+            if (!skipAutoStart) {
+                game.startGame();
+            }
+            console.log('Game initialized with fallback method');
+            return game;
         }
-        
-        // Now manually start the game
-        window.gameInstance.startGame();
-        console.log('Game initialized successfully!');
     } catch (err) {
         console.error('Failed to initialize game:', err);
-        displayErrorMessage();
+        return null;
     }
 }
 
 // Start the game when the page loads
 window.onload = async () => {
     try {
+        console.log('Loading game resources...');
+        
         // First load the variations from the JSON file
         await loadVariations();
         
-        // Create a safer initialization
-        initializeGame();
+        // Initialize the game
+        const game = await initializeGame(true);
+        
+        if (game) {
+            console.log('Game ready to play!');
+        } else {
+            console.error('Game initialization failed');
+            displayErrorMessage();
+        }
     } catch (error) {
-        console.error('Error initializing game:', error);
-        // Display a user-friendly error message
+        console.error('Error during game startup:', error);
         displayErrorMessage();
     }
 };

@@ -10,9 +10,13 @@
     <meta name="theme-color" content="#1a1f2c">
     <title>RPS Battle</title>
     
-    <!-- Preload critical assets -->
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" as="script">
+    <!-- Preload critical assets with matching integrity hashes -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" 
+          crossorigin="anonymous">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" as="script"
+          integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" 
+          crossorigin="anonymous">
     
     <!-- Bootstrap CSS with integrity and crossorigin attributes for better security and caching -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" 
@@ -229,19 +233,61 @@
                 console.warn('Bootstrap not loaded properly. Loading fallback...');
                 const bootstrapJS = document.createElement('script');
                 bootstrapJS.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
+                bootstrapJS.integrity = 'sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz';
+                bootstrapJS.crossOrigin = 'anonymous';
                 document.body.appendChild(bootstrapJS);
             }
             
             // Fix for iOS Safari 100vh issue
             function setVH() {
+                // Get actual viewport height
                 let vh = window.innerHeight * 0.01;
                 document.documentElement.style.setProperty('--vh', `${vh}px`);
+                
+                // Set canvas size
+                const canvas = document.getElementById('gameCanvas');
+                if (canvas) {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                }
+                
+                // Update modal heights if open
+                const modalBody = document.querySelector('.modal-body');
+                if (modalBody) {
+                    modalBody.style.maxHeight = `${window.innerHeight * 0.7}px`;
+                }
             }
             
             // Set initial viewport height
             setVH();
             
             // Update on resize and orientation change
+            window.addEventListener('resize', function() {
+                // Delay execution to ensure viewport is stable
+                setTimeout(setVH, 100);
+            });
+            
+            window.addEventListener('orientationchange', function() {
+                // Delay execution to ensure orientation change is complete
+                setTimeout(setVH, 200);
+            });
+            
+            // Handle software keyboard appearance (mainly for iOS)
+            if ('visualViewport' in window) {
+                window.visualViewport.addEventListener('resize', function() {
+                    // Don't adjust vh when keyboard appears
+                    if (window.visualViewport.height < window.innerHeight) {
+                        // Keyboard is visible, don't resize
+                        return;
+                    }
+                    setVH();
+                });
+            }
+            
+            // Force a resize once the page is fully loaded
+            window.addEventListener('load', function() {
+                setVH();
+            });
             window.addEventListener('resize', setVH);
             window.addEventListener('orientationchange', setVH);
         });

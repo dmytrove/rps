@@ -119,15 +119,29 @@ flowchart TD
 ### Variations
 The simulator includes multiple themed variations of the Rock-Paper-Scissors game:
 
-- **Classic**: 🗿 Rock, 📰 Paper, ✂️ Scissors
-- **Elements**: 🔥 Fire, 💧 Water, 🌿 Leaf
-- **Space**: 🚀 Rocket, 🪐 Planet, ☄️ Comet
+- **Classic**: 🪨 Rock, 📄 Paper, ✂️ Scissors
+- **Elemental**: 🔥 Fire, 🌿 Grass, 💧 Water
+- **Space**: 🚀 Rocket, 🪐 Planet, ☄️ Meteor
 - **Weather**: ☀️ Sun, 🌧️ Rain, ❄️ Snow
 - **Animals**: 🐯 Tiger, 🐺 Wolf, 🦊 Fox
 - **Food**: 🍔 Burger, 🍕 Pizza, 🌮 Taco
-- **Technology**: 💻 Computer, 📱 Phone, 📷 Camera
-- **Emotions**: 😀 Happy, 😠 Angry, 😱 Scared
+- **Tech**: 💻 Computer, 📱 Phone, 📷 Camera
+- **Emotions**: 😊 Happy, 😢 Sad, 😡 Angry
+- **Fantasy**: 🧙 Wizard, 🧝 Elf, 🐉 Dragon
+- **Music**: 🎸 Guitar, 🎹 Piano, 🥁 Drums
+- **Sports**: ⚽ Soccer, 🏈 Football, 🏀 Basketball
+- **Sea Creatures**: 🦈 Shark, 🐡 Pufferfish, 🐙 Octopus
+- **Fruits**: 🍎 Apple, 🍌 Banana, 🍇 Grapes
+- **Transportation**: ✈️ Plane, 🚗 Car, 🚢 Ship
 
 Each variation maintains the same cyclical relationship but with themed elements. The relationship diagram displays the elements in a triangle formation with curved outward-facing arrows showing the relationship between them, just like in the screenshot.
 
-## �� Technical Details
+#### Audio Theming
+Each variation features unique synthesized sounds with carefully designed audio characteristics:
+
+- **Variation-Specific Sound Profiles**: Each theme (Classic, Elements, Space, etc.) has its own audio profile with unique oscillator types, base frequencies, and envelope characteristics
+- **Type-Specific Audio**: Within each variation, the item types (e.g., Rock, Paper, Scissors) have custom sound modifications including oscillator mixing, detuning, and filter effects
+- **Adaptive Collision Sounds**: Transformation sounds are dynamically generated based on the relationship between colliding items
+- **Sound Memory**: The game remembers collision sound patterns, ensuring consistent audio feedback throughout a gameplay session
+
+## 🎛 Technical Details

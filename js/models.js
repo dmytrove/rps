@@ -10,6 +10,9 @@ class Glow {
         this.radius = 20;
         this.maxRadius = 40;
         this.alpha = 0.4;
+        this.fadeSpeed = 0.03; // How quickly the glow fades out
+        this.lifetime = 0; // Track how long the glow has existed
+        this.maxLifetime = 45; // Maximum frames a glow can exist (about 0.75s at 60fps)
         
         // Handle variation types
         const fromKey = fromType.toUpperCase();
@@ -21,8 +24,21 @@ class Glow {
     }
 
     update() {
-        this.alpha -= 0.03;
-        return this.alpha > 0;
+        // Increase lifetime
+        this.lifetime++;
+        
+        // Start fading out after a short delay 
+        if (this.lifetime > 5) {
+            this.alpha -= this.fadeSpeed;
+        }
+        
+        // Allow the glow to grow slightly
+        if (this.radius < this.maxRadius) {
+            this.radius += 0.5;
+        }
+        
+        // Return true if the glow should continue existing
+        return this.alpha > 0 && this.lifetime < this.maxLifetime;
     }
 
     draw(ctx) {

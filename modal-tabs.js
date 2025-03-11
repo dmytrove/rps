@@ -358,14 +358,32 @@ function updateModalHeight(modal) {
     if (!modal) return;
     
     // Get viewport height excluding virtual keyboard if possible
-    const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    const viewportHeight = window.visualViewport 
+        ? window.visualViewport.height 
+        : window.innerHeight;
     
     // Set modal max-height based on viewport
     const modalBody = modal.querySelector('.modal-body');
     if (modalBody) {
         // Use 70% of viewport height for modal body
-        modalBody.style.maxHeight = `${viewportHeight * 0.7}px`;
+        const maxHeight = Math.min(viewportHeight * 0.7, 600); // Cap at 600px
+        modalBody.style.maxHeight = `${maxHeight}px`;
         modalBody.style.overflowY = 'auto';
+    }
+
+    // Adjust modal position to be centered in the visible viewport
+    const modalDialog = modal.querySelector('.modal-dialog');
+    if (modalDialog && window.visualViewport) {
+        // Center modal in the visible area
+        const topOffset = (viewportHeight - modalDialog.offsetHeight) / 2;
+        if (topOffset > 0) {
+            modalDialog.style.marginTop = `${Math.max(10, topOffset)}px`;
+            modalDialog.style.marginBottom = `${Math.max(10, topOffset)}px`;
+        } else {
+            // If modal is taller than viewport, align to top with small margin
+            modalDialog.style.marginTop = '10px';
+            modalDialog.style.marginBottom = '10px';
+        }
     }
 }
 
@@ -381,6 +399,12 @@ function handleViewportChanges() {
             // Re-apply mobile styles if needed
             const isMobile = detectMobileDevice();
             setupMobileModal(isMobile);
+            
+            // Force a layout recalculation
+            document.body.style.display = 'none';
+            // This will force layout recalculation
+            void document.body.offsetHeight;
+            document.body.style.display = '';
         }, 300);
     });
     
@@ -388,9 +412,27 @@ function handleViewportChanges() {
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', () => {
             const modal = document.getElementById('settingsModal');
-            updateModalHeight(modal);
+            
+            // Only update modal height if the keyboard isn't visible
+            if (window.visualViewport.height >= window.innerHeight * 0.7) {
+                updateModalHeight(modal);
+            } else {
+                // If keyboard is visible, adjust the modal to stay in view
+                const modalDialog = modal?.querySelector('.modal-dialog');
+                if (modalDialog) {
+                    modalDialog.style.marginTop = '10px';
+                }
+            }
         });
     }
+    
+    // Add additional handling for screen rotation
+    window.matchMedia('(orientation: portrait)').addEventListener('change', () => {
+        setTimeout(() => {
+            const modal = document.getElementById('settingsModal');
+            updateModalHeight(modal);
+        }, 300);
+    });
 }
 
 // Enhance UI for touch-friendly interactions

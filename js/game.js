@@ -680,122 +680,146 @@ class Game {
     
     // Start a new round
     startRound() {
-        // Check if random variation is enabled and switch to a random variation
-        // Use a temporary variable to avoid toggling random variation within selectRandomVariation
-        const isRandomVariation = this.config.randomVariation;
-        
-        if (isRandomVariation) {
-            console.log('Random variation enabled - selecting new variation for this round');
+        try {
+            console.log('Starting new round...');
             
-            // Select a random variation at the start of the round
-            // Pass true to skip starting another round (which would cause recursion)
-            this.selectRandomVariation(true); 
-        }
-        
-        // Clear any existing items and glows
-        this.items = [];
-        this.glowIntensities = {};
-        
-        // Reset round start time
-        this.roundStartTime = Date.now();
-        
-        // Reset winner state
-        this.hasWinner = false;
-        this.lastWinner = null;
-        
-        // Get the current variation
-        const variation = VARIATIONS[this.currentVariation];
-        if (!variation) {
-            console.error(`Variation ${this.currentVariation} not found`);
-            return;
-        }
-        
-        // Create items based on the current variation
-        const types = [...new Set(variation.rules.flatMap(rule => 
-            [rule.winner.toUpperCase(), rule.loser.toUpperCase()]
-        ))];
-        
-        // Create item types array from the variation data
-        const itemTypes = types.map(type => {
-            return {
-                type: type,
-                emoji: variation.types[type] || '❓',
-                color: variation.colors?.[type] || '#999999'
-            };
-        });
-        
-        // Use the itemCount directly as the number of items per type
-        const itemsPerType = this.config.itemCount;
-        
-        // Initialize a string to track the initial distribution
-        let initialDistribution = '';
-        
-        // Create items for each type
-        for (const type of types) {
-            const itemType = itemTypes.find(item => item.type === type);
-            if (!itemType) continue;
-            
-            // Add to the initial distribution string
-            initialDistribution += `${itemType.emoji}×${itemsPerType} `;
-            
-            // Create the items
-            for (let i = 0; i < itemsPerType; i++) {
-                this.items.push(new Item(
-                    itemType.type,
-                    Math.random() * this.canvas.width,
-                    Math.random() * this.canvas.height,
-                    this.config.itemSize,
-                    this.config.speedMultiplier
-                ));
+            // Clear chart data at start of round
+            if (this.graphManager && typeof this.graphManager.resetChart === 'function') {
+                console.log('Resetting graph chart data');
+                this.graphManager.resetChart();
+            } else {
+                console.warn('GraphManager not available or missing resetChart method');
             }
+            
+            // Clear existing items and glows
+            this.items = [];
+            this.glows = []; // Clear any existing glows
+            this.roundEndProcessed = false;
+            this.roundStartTime = Date.now();
+            
+            // Get the current variation
+            const variation = VARIATIONS[CURRENT_VARIATION];
+            if (!variation) {
+                console.error(`Variation ${CURRENT_VARIATION} not found`);
+                return false;
+            }
+            
+            const types = Object.keys(variation.types).map(key => key.toLowerCase());
+            if (types.length === 0) {
+                console.error('No types found in current variation');
+                return false;
+            }
+            
+            // Track initial distribution
+            const initialCounts = {};
+            types.forEach(type => initialCounts[type] = 0);
+            
+            // Create items with proper spacing
+            const spaceBuffer = 5; // Small buffer to prevent immediate collisions
+            
+            // Create items based on the current variation
+            const typesArray = types.map(type => {
+                return {
+                    type: type,
+                    emoji: variation.types[type] || '❓',
+                    color: variation.colors?.[type] || '#999999'
+                };
+            });
+            
+            // Use the itemCount directly as the number of items per type
+            const itemsPerType = this.config.itemCount;
+            
+            // Initialize a string to track the initial distribution
+            let initialDistribution = '';
+            
+            // Create items for each type
+            for (const type of types) {
+                const itemType = typesArray.find(item => item.type === type);
+                if (!itemType) {
+                    console.warn(`Type ${type} not found in typesArray`);
+                    continue;
+                }
+                
+                // Add to the initial distribution string
+                initialDistribution += `${itemType.emoji}×${itemsPerType} `;
+                
+                // Create the items
+                for (let i = 0; i < itemsPerType; i++) {
+                    this.items.push(new Item(
+                        itemType.type,
+                        Math.random() * this.canvas.width,
+                        Math.random() * this.canvas.height,
+                        this.config.itemSize,
+                        this.config.speedMultiplier
+                    ));
+                }
+            }
+            
+            // Store the initial distribution for history
+            this.lastDistribution = initialDistribution.trim();
+            
+            // Reset the distribution graph
+            if (this.graphManager) {
+                this.graphManager.resetChart();
+                // Create datasets based on current items
+                this.graphManager.createDatasets(this.items);
+            }
+            
+            // Show notification
+            if (this.notificationManager && typeof this.notificationManager.showNotification === 'function') {
+                this.notificationManager.showNotification('New Round Started!', 'info');
+            }
+            
+            console.log(`Started new round with ${this.items.length} items (${types.length} types)`);
+            
+            return true;
+        } catch (error) {
+            console.error('Error in startRound:', error);
+            return false;
         }
-        
-        // Store the initial distribution for history
-        this.lastDistribution = initialDistribution.trim();
-        
-        // Reset the distribution graph
-        if (this.graphManager) {
-            this.graphManager.resetChart();
-            // Create datasets based on current items
-            this.graphManager.createDatasets(this.items);
-        }
-        
-        // Show notification
-        if (this.notificationManager && typeof this.notificationManager.showNotification === 'function') {
-            this.notificationManager.showNotification('New Round Started!', 'info');
-        }
-        
-        console.log(`Started new round with ${this.items.length} items (${types.length} types)`);
     }
     
     // Main animation loop
     animate(timestamp = 0) {
-        const deltaTime = timestamp - this.lastFrameTime;
-        this.lastFrameTime = timestamp;
-        this.frameCount++;
-        
-        // Update game state
-        this.update();
-        
-        // Draw the game
-        this.draw();
-        
-        // Continue animation loop
-        this.animationFrameId = requestAnimationFrame((t) => this.animate(t));
+        try {
+            const deltaTime = timestamp - this.lastFrameTime;
+            this.lastFrameTime = timestamp;
+            this.frameCount++;
+            
+            // Update game state
+            this.update();
+            
+            // Draw the game
+            this.draw();
+            
+            // Continue animation loop
+            this.animationFrameId = requestAnimationFrame((t) => this.animate(t));
+        } catch (error) {
+            console.error('Error in animation loop:', error);
+            
+            // Attempt to recover by restarting the animation loop
+            console.log('Attempting to recover animation loop...');
+            
+            // Cancel the current animation frame to prevent multiple loops
+            if (this.animationFrameId) {
+                cancelAnimationFrame(this.animationFrameId);
+            }
+            
+            // Restart the animation loop after a short delay
+            setTimeout(() => {
+                console.log('Restarting animation loop');
+                this.animationFrameId = requestAnimationFrame((t) => this.animate(t));
+            }, 1000);
+        }
     }
     
-    // Update game state
+    // Main update method for the game (called each frame)
     update() {
-        // Make sure canvas is valid
-        if (!this.canvas || !this.ctx) {
-            console.warn('Invalid canvas in Game.update');
-            return;
-        }
+        // Update each item's position
+        this.items.forEach(item => item.update(this.canvas));
         
-        // Update all items
-        for (let i = 0; i < this.items.length; i++) {
-            this.items[i].update(this.canvas);
-        }
+        // Filter out expired glows
+        this.glows = this.glows.filter(glow => glow.update());
         
         // Handle collisions
         this.handleCollisions();
@@ -1263,6 +1287,181 @@ class Game {
         if (this.graphManager) {
             this.graphManager.handleTabChange(tabId);
         }
+    }
+
+    initializeGame() {
+        try {
+            console.log('Initializing game components...');
+            
+            // Setup canvas
+            this.canvas = document.getElementById('gameCanvas');
+            if (!this.canvas) {
+                console.error('Canvas element not found');
+                return false;
+            }
+            
+            this.ctx = this.canvas.getContext('2d');
+            if (!this.ctx) {
+                console.error('Could not get 2D context from canvas');
+                return false;
+            }
+            
+            // Set initial canvas size
+            this.resize();
+            
+            // Force audio initialization by creating the audio manager if it doesn't exist
+            if (!this.audioManager) {
+                this.audioManager = new AudioManager();
+            }
+            console.log('Audio manager initialized in Game.initializeGame');
+            
+            // Create managers if they don't exist
+            if (!this.chartManager) {
+                this.chartManager = new ChartManager(this.currentVariation || CURRENT_VARIATION);
+                console.log('ChartManager created');
+            }
+            
+            if (!this.graphManager) {
+                this.graphManager = new GraphManager({
+                    realtimeCharting: this.config.realtimeChart,
+                    refreshRate: this.config.chartRefreshRate
+                });
+                console.log('GraphManager created');
+            }
+            
+            // Setup event listeners
+            this.setupEventListeners();
+            console.log('Event listeners set up');
+            
+            // Enable audio with a test sound on user interaction
+            const enableAudio = () => {
+                if (this.audioManager) {
+                    // Resume AudioContext on user interaction (needed for Chrome/Safari)
+                    if (this.audioManager.audioContext && 
+                        this.audioManager.audioContext.state === 'suspended') {
+                        this.audioManager.audioContext.resume().then(() => {
+                            console.log('AudioContext resumed by user interaction');
+                        });
+                    }
+                }
+                document.removeEventListener('click', enableAudio);
+            };
+            document.addEventListener('click', enableAudio);
+            
+            // Initialize UI components in a controlled sequence
+            console.log('Starting initialization sequence...');
+            
+            // First initialize the charts
+            this.initializeCharts();
+            
+            // Then initialize variation display and start game after both are ready
+            setTimeout(() => {
+                // Initialize variation display
+                if (typeof this.initializeVariationDisplay === 'function') {
+                    this.initializeVariationDisplay();
+                    console.log('Variation display initialized');
+                } else {
+                    console.warn('initializeVariationDisplay method not found');
+                }
+                
+                // Start game loop only after all initializations are complete
+                setTimeout(() => {
+                    console.log('Starting game loop...');
+                    this.startRound();
+                    this.animate();
+                }, 200);
+            }, 500);
+            
+            return true;
+        } catch (error) {
+            console.error('Error initializing game:', error);
+            return false;
+        }
+    }
+
+    // Clean up resources when the game is destroyed
+    destroy() {
+        // Stop animation frame
+        if (this.animationFrameId) {
+            cancelAnimationFrame(this.animationFrameId);
+            this.animationFrameId = null;
+        }
+        
+        // Clean up graph manager if it exists
+        if (this.graphManager && typeof this.graphManager.destroy === 'function') {
+            this.graphManager.destroy();
+            this.graphManager = null;
+        }
+        
+        // Clean up audio manager if needed
+        if (this.audioManager && typeof this.audioManager.dispose === 'function') {
+            this.audioManager.dispose();
+        }
+        
+        // Clear items and glows
+        this.items = [];
+        this.glows = [];
+        
+        // Remove event listeners
+        window.removeEventListener('resize', this.resize);
+        
+        console.log('Game resources cleaned up');
+    }
+
+    // Initialize chart and graph managers
+    initializeCharts() {
+        console.log('Preparing to set up charts and graphs...');
+        
+        // Check if chart containers exist in DOM
+        const rulesChartContainer = document.getElementById('rulesChart');
+        const distributionChartContainer = document.getElementById('distributionChart');
+        
+        if (!rulesChartContainer || !distributionChartContainer) {
+            console.warn(`Chart containers not found in DOM yet. Rules chart: ${rulesChartContainer ? 'found' : 'missing'}, Distribution chart: ${distributionChartContainer ? 'found' : 'missing'}`);
+        }
+        
+        // Function to retry setup
+        const setupWithRetry = (manager, managerName, maxRetries = 3, retryDelay = 300) => {
+            let retries = 0;
+            
+            const attemptSetup = () => {
+                if (!manager || typeof manager.setupChart !== 'function') {
+                    console.warn(`${managerName} not available or missing setupChart method`);
+                    return false;
+                }
+                
+                try {
+                    manager.setupChart();
+                    console.log(`${managerName} setup completed`);
+                    return true;
+                } catch (error) {
+                    console.warn(`Error setting up ${managerName}:`, error);
+                    
+                    if (retries < maxRetries) {
+                        retries++;
+                        console.log(`Retrying ${managerName} setup (attempt ${retries}/${maxRetries})...`);
+                        setTimeout(attemptSetup, retryDelay);
+                    } else {
+                        console.error(`Failed to set up ${managerName} after ${maxRetries} attempts`);
+                    }
+                    return false;
+                }
+            };
+            
+            return attemptSetup();
+        };
+        
+        // Delay chart setup to ensure DOM is ready
+        setTimeout(() => {
+            console.log('Setting up charts and graphs...');
+            
+            // Setup the rules chart using chartManager
+            setupWithRetry(this.chartManager, 'ChartManager');
+            
+            // Setup the distribution graph using graphManager
+            setupWithRetry(this.graphManager, 'GraphManager');
+            
+        }, 500); // Increased delay to make sure DOM is ready
     }
 }
 
