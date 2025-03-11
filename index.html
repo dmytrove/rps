@@ -3,36 +3,52 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1f2c">
     <title>RPS Battle</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" as="script">
+    
+    <!-- Bootstrap CSS with integrity and crossorigin attributes for better security and caching -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" 
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" 
+          crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/solid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" 
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" 
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/solid.min.css" 
+          integrity="sha512-yDUXOUWwbHH4ggxueDnC5vJv4tmfySpVdIcN1LksGZi8W8EVZv4uKGrQc0pVf66zS7LDhFJM7Zdeow1sw1/8Jw==" 
+          crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <!-- Control Buttons - Updated for better mobile touch targets -->
+    <!-- Game Canvas -->
+    <canvas id="gameCanvas" touch-action="none"></canvas>
+
+    <!-- Control Buttons with improved touch handling -->
     <div class="control-buttons">
-        <div class="btn-group" role="group">
-            <button id="settingsBtn" class="btn btn-dark control-btn" data-bs-toggle="modal" data-bs-target="#settingsModal" data-bs-tab="settings-tab">
-                <i class="fas fa-sliders-h"></i>
+        <div class="btn-group" role="group" aria-label="Game controls">
+            <button id="settingsBtn" class="btn btn-dark control-btn" data-bs-toggle="modal" data-bs-target="#settingsModal" data-bs-tab="settings-tab" aria-label="Settings">
+                <i class="fas fa-sliders-h" aria-hidden="true"></i>
             </button>
-            <button id="graphBtn" class="btn btn-dark control-btn" data-bs-toggle="modal" data-bs-target="#settingsModal" data-bs-tab="graph-tab">
-                <i class="fas fa-chart-line"></i>
+            <button id="graphBtn" class="btn btn-dark control-btn" data-bs-toggle="modal" data-bs-target="#settingsModal" data-bs-tab="graph-tab" aria-label="Graph">
+                <i class="fas fa-chart-line" aria-hidden="true"></i>
             </button>
-            <button id="historyBtn" class="btn btn-dark control-btn" data-bs-toggle="modal" data-bs-target="#settingsModal" data-bs-tab="history-tab">
-                <i class="fas fa-history"></i>
+            <button id="historyBtn" class="btn btn-dark control-btn" data-bs-toggle="modal" data-bs-target="#settingsModal" data-bs-tab="history-tab" aria-label="History">
+                <i class="fas fa-history" aria-hidden="true"></i>
             </button>
-            <button id="muteBtn" class="btn btn-dark control-btn">
-                <i class="fas fa-volume-up"></i>
+            <button id="muteBtn" class="btn btn-dark control-btn" aria-label="Mute">
+                <i class="fas fa-volume-up" aria-hidden="true"></i>
             </button>
         </div>
     </div>
-
-    <!-- Game Canvas -->
-    <canvas id="gameCanvas"></canvas>
 
     <!-- Settings Modal - Updated for better mobile display -->
     <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true" data-bs-backdrop="static">
@@ -200,7 +216,37 @@
     <!-- Modal Backdrop Overlay -->
     <div class="modal-backdrop fade d-none"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS with Popper - added integrity and crossorigin attributes -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" 
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" 
+            crossorigin="anonymous"></script>
+
+    <!-- Ensure Bootstrap is loaded before other scripts -->
+    <script>
+        // Check if Bootstrap is loaded properly
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof bootstrap === 'undefined') {
+                console.warn('Bootstrap not loaded properly. Loading fallback...');
+                const bootstrapJS = document.createElement('script');
+                bootstrapJS.src = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js';
+                document.body.appendChild(bootstrapJS);
+            }
+            
+            // Fix for iOS Safari 100vh issue
+            function setVH() {
+                let vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+            }
+            
+            // Set initial viewport height
+            setVH();
+            
+            // Update on resize and orientation change
+            window.addEventListener('resize', setVH);
+            window.addEventListener('orientationchange', setVH);
+        });
+    </script>
+
     <script type="module" src="js/init.js"></script>
     <script src="variations-display.js"></script>
     <script src="modal-tabs.js"></script>

@@ -1,20 +1,114 @@
 // Script to handle modal tab navigation
 document.addEventListener('DOMContentLoaded', function() {
-    // Make modal draggable
-    makeDraggable();
+    // More reliable device detection
+    const isMobileDevice = detectMobileDevice();
     
-    // Handle tab navigation
-    setupTabNavigation();
+    // Ensure Bootstrap is properly loaded
+    if (typeof bootstrap === 'undefined') {
+        console.error('Bootstrap is not loaded. Loading essential functionality...');
+        setupBasicModalFunctionality();
+    } else {
+        // Only make modal draggable on non-mobile devices
+        if (!isMobileDevice) {
+            makeDraggable();
+        }
+        
+        // Handle tab navigation
+        setupTabNavigation();
+        
+        // Handle direct tab opening
+        setupTabOpeners();
+        
+        // Set up auto-refresh for charts
+        setupChartRefresh();
+    }
     
-    // Handle direct tab opening
-    setupTabOpeners();
+    // Handle modal for mobile devices - this should work regardless of Bootstrap
+    setupMobileModal(isMobileDevice);
     
-    // Set up auto-refresh for charts
-    setupChartRefresh();
+    // Handle viewport resizing and orientation changes
+    handleViewportChanges();
     
-    // Handle modal for mobile devices
-    setupMobileModal();
+    // Add touch-friendly event handlers
+    enhanceTouchInteractions();
 });
+
+// Better mobile device detection
+function detectMobileDevice() {
+    // Check for touch capability
+    const hasTouch = 'ontouchstart' in window || 
+                     navigator.maxTouchPoints > 0 ||
+                     navigator.msMaxTouchPoints > 0;
+                     
+    // Check for mobile user agent
+    const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    // Check viewport size
+    const isSmallViewport = window.matchMedia('(max-width: 768px)').matches;
+    
+    // Device is likely mobile if it has touch capability AND (has mobile UA OR small viewport)
+    return hasTouch && (isMobileUA || isSmallViewport);
+}
+
+// Fallback for essential modal functionality if Bootstrap is not loaded
+function setupBasicModalFunctionality() {
+    // Get modal elements
+    const modal = document.getElementById('settingsModal');
+    const closeButtons = document.querySelectorAll('[data-bs-dismiss="modal"]');
+    const modalOpeners = document.querySelectorAll('[data-bs-toggle="modal"]');
+    
+    if (!modal) return;
+    
+    // Add click handlers to open modal
+    modalOpeners.forEach(opener => {
+        opener.addEventListener('click', function() {
+            modal.style.display = 'block';
+            document.body.classList.add('modal-open');
+            
+            // Handle tab activation if specified
+            const tabId = this.getAttribute('data-bs-tab');
+            if (tabId) {
+                const tabButtons = document.querySelectorAll('.nav-link');
+                const tabContents = document.querySelectorAll('.tab-pane');
+                
+                // Deactivate all tabs
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => {
+                    content.classList.remove('show');
+                    content.classList.remove('active');
+                });
+                
+                // Activate the selected tab
+                const selectedTab = document.getElementById(tabId);
+                if (selectedTab) {
+                    selectedTab.classList.add('active');
+                    const targetId = selectedTab.getAttribute('data-bs-target');
+                    const targetContent = document.querySelector(targetId);
+                    if (targetContent) {
+                        targetContent.classList.add('show');
+                        targetContent.classList.add('active');
+                    }
+                }
+            }
+        });
+    });
+    
+    // Add click handlers to close modal
+    closeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            modal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+        });
+    });
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+        }
+    });
+}
 
 // Make the modal draggable
 function makeDraggable() {
@@ -192,28 +286,164 @@ function setupChartRefresh() {
 }
 
 // Setup mobile-specific modal behavior
-function setupMobileModal() {
+function setupMobileModal(isMobile) {
     const modal = document.getElementById('settingsModal');
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || 
-                    (window.matchMedia && window.matchMedia('(max-width: 768px)').matches);
     
-    if (modal && isMobile) {
+    if (!modal) return;
+    
+    const modalDialog = modal.querySelector('.modal-dialog');
+    
+    if (isMobile) {
         // Ensure modal doesn't allow dragging on mobile
-        modal.querySelector('.modal-dialog')?.classList.remove('draggable-modal');
-        modal.querySelector('.modal-dialog')?.classList.add('mobile-friendly-modal');
+        modalDialog?.classList.remove('draggable-modal');
+        modalDialog?.classList.add('mobile-friendly-modal');
         
-        // Fix for iOS Safari address bar issues
-        window.addEventListener('resize', () => {
-            // Set modal max-height based on viewport
-            const modalBody = modal.querySelector('.modal-body');
-            if (modalBody) {
-                modalBody.style.maxHeight = `${window.innerHeight * 0.7}px`;
-            }
-        });
+        // Apply mobile-specific styles directly to ensure they work
+        if (modalDialog) {
+            modalDialog.style.maxWidth = '95%';
+            modalDialog.style.margin = '0.5rem auto';
+            modalDialog.style.width = 'auto';
+        }
         
-        // Trigger resize on modal open to set proper heights
+        const modalContent = modal.querySelector('.modal-content');
+        if (modalContent) {
+            modalContent.style.borderRadius = '0.5rem';
+            // Ensure backdrop filter works on GitHub Pages
+            modalContent.style.backgroundColor = '#1a1f2c';
+            modalContent.style.backgroundColor = 'rgba(26, 31, 44, 0.95)';
+            modalContent.style.backdropFilter = 'blur(15px)';
+            modalContent.style.webkitBackdropFilter = 'blur(15px)';
+        }
+        
+        // Optimize touch scrolling
+        const modalBody = modal.querySelector('.modal-body');
+        if (modalBody) {
+            modalBody.style.webkitOverflowScrolling = 'touch';
+        }
+        
+        // Enhance UI for touch devices
+        enhanceTouchFriendlyUI();
+    }
+    
+    // Fix for iOS Safari address bar issues
+    window.addEventListener('resize', () => {
+        updateModalHeight(modal);
+    });
+    
+    // Trigger resize on modal open to set proper heights
+    if (typeof bootstrap !== 'undefined') {
         modal.addEventListener('shown.bs.modal', () => {
-            window.dispatchEvent(new Event('resize'));
+            updateModalHeight(modal);
+            
+            // Wait a moment for animations to complete
+            setTimeout(() => {
+                updateModalHeight(modal);
+            }, 300);
+        });
+    } else {
+        // Fallback for when Bootstrap is not available
+        const modalOpeners = document.querySelectorAll('[data-bs-toggle="modal"]');
+        modalOpeners.forEach(opener => {
+            opener.addEventListener('click', () => {
+                setTimeout(() => {
+                    updateModalHeight(modal);
+                }, 300);
+            });
         });
     }
+}
+
+// Function to update modal height based on viewport
+function updateModalHeight(modal) {
+    if (!modal) return;
+    
+    // Get viewport height excluding virtual keyboard if possible
+    const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+    
+    // Set modal max-height based on viewport
+    const modalBody = modal.querySelector('.modal-body');
+    if (modalBody) {
+        // Use 70% of viewport height for modal body
+        modalBody.style.maxHeight = `${viewportHeight * 0.7}px`;
+        modalBody.style.overflowY = 'auto';
+    }
+}
+
+// Handle viewport and orientation changes
+function handleViewportChanges() {
+    // Handle orientation changes specifically
+    window.addEventListener('orientationchange', () => {
+        // Wait for the orientation change to complete
+        setTimeout(() => {
+            const modal = document.getElementById('settingsModal');
+            updateModalHeight(modal);
+            
+            // Re-apply mobile styles if needed
+            const isMobile = detectMobileDevice();
+            setupMobileModal(isMobile);
+        }, 300);
+    });
+    
+    // Listen for visual viewport changes (handles keyboard appearance on mobile)
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+            const modal = document.getElementById('settingsModal');
+            updateModalHeight(modal);
+        });
+    }
+}
+
+// Enhance UI for touch-friendly interactions
+function enhanceTouchFriendlyUI() {
+    // Increase size of interactive elements for touch
+    const touchTargets = document.querySelectorAll('.nav-link, .form-check-input, .btn-close');
+    touchTargets.forEach(element => {
+        const computedStyle = window.getComputedStyle(element);
+        const currentPadding = parseInt(computedStyle.padding || '0', 10);
+        
+        // Only increase padding if it's not already large enough
+        if (currentPadding < 10) {
+            element.style.padding = '10px';
+        }
+    });
+    
+    // Improve tab navigation experience on touch
+    const tabButtons = document.querySelectorAll('.nav-tabs .nav-link');
+    tabButtons.forEach(button => {
+        button.style.fontSize = '16px';
+        button.style.padding = '12px 15px';
+    });
+}
+
+// Add touch-specific event handlers
+function enhanceTouchInteractions() {
+    // Better handling for sliders
+    const sliders = document.querySelectorAll('.form-range');
+    sliders.forEach(slider => {
+        // Provide visual feedback on touch
+        slider.addEventListener('touchstart', () => {
+            slider.style.opacity = '0.8';
+        });
+        
+        slider.addEventListener('touchend', () => {
+            slider.style.opacity = '1';
+        });
+    });
+    
+    // Better handling for buttons
+    const buttons = document.querySelectorAll('.btn, .nav-link');
+    buttons.forEach(button => {
+        button.addEventListener('touchstart', () => {
+            button.style.transform = 'scale(0.98)';
+        });
+        
+        button.addEventListener('touchend', () => {
+            button.style.transform = 'scale(1)';
+        });
+        
+        // Clean up if touch moves away
+        button.addEventListener('touchmove', () => {
+            button.style.transform = 'scale(1)';
+        });
+    });
 }

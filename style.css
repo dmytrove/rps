@@ -1,4 +1,8 @@
 /* Global Styles */
+:root {
+    --vh: 1vh;
+}
+
 body {
     background-color: #0a0e17;
     margin: 0;
@@ -6,6 +10,9 @@ body {
     overflow: hidden;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #f8f9fa;
+    touch-action: manipulation; /* Improve touch response */
+    height: 100vh; /* Fallback */
+    height: calc(var(--vh, 1vh) * 100); /* Use --vh for iOS Safari */
 }
 
 #gameCanvas {
@@ -15,6 +22,9 @@ body {
     left: 0;
     z-index: 0;
     background: radial-gradient(circle at center, rgba(20, 30, 48, 0.5) 0%, rgba(10, 14, 23, 0.7) 70%);
+    width: 100vw;
+    height: 100vh; /* Fallback */
+    height: calc(var(--vh, 1vh) * 100); /* Use --vh for iOS Safari */
 }
 
 /* Control Buttons */
@@ -446,22 +456,98 @@ body {
     z-index: 2000; /* Ensure it's above other elements */
 }
 
+.modal-dialog {
+    margin: 1.75rem auto;
+}
+
 .modal-content {
-    background-color: rgba(26, 31, 44, 0.95) !important;
+    background-color: #1a1f2c !important; /* Solid background color as fallback */
+    background-color: rgba(26, 31, 44, 0.95) !important; 
+    -webkit-backdrop-filter: blur(15px);
     backdrop-filter: blur(15px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     border-radius: 15px;
+    color: #fff;
 }
 
 .modal-header, .modal-footer {
     border-color: rgba(255, 255, 255, 0.1);
+    padding: 1rem;
 }
 
 .modal-title {
     color: #fff;
     font-weight: 600;
     letter-spacing: 0.5px;
+}
+
+/* Modal Body */
+.modal-body {
+    padding: 1.5rem;
+    max-height: 70vh;
+    max-height: calc(var(--vh, 1vh) * 70);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile-friendly modal */
+.mobile-friendly-modal {
+    max-width: 90%;
+    width: auto;
+    margin: 1.75rem auto;
+}
+
+/* Explicitly style the close button */
+.btn-close-white {
+    background-color: transparent;
+    color: white;
+    opacity: 0.7;
+    padding: 1rem;
+    box-sizing: content-box;
+}
+
+.btn-close-white:hover,
+.btn-close-white:focus {
+    opacity: 1;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Modal nav tabs */
+.modal .nav-tabs {
+    border-bottom: 1px solid rgba(78, 115, 223, 0.3);
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+}
+
+.modal .nav-tabs::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+}
+
+.modal .nav-tabs .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: 0.6rem 1rem;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.modal .nav-tabs .nav-link:hover {
+    color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(78, 115, 223, 0.5);
+    background-color: rgba(78, 115, 223, 0.1);
+}
+
+.modal .nav-tabs .nav-link.active {
+    color: #fff;
+    background-color: transparent;
+    border-color: #4e73df;
+    font-weight: 600;
 }
 
 /* Nav Tabs Styling */
@@ -876,28 +962,6 @@ body {
     max-width: 700px;
 }
 
-.modal-body {
-    max-height: 70vh;
-    overflow-y: auto;
-}
-
-/* Graph tab styles */
-.chart-container {
-    width: 100%;
-    height: 350px;
-    position: relative;
-    margin-bottom: 10px;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-/* History table styles */
-.table-responsive {
-    max-height: 350px;
-    overflow-y: auto;
-}
-
 .table-dark {
     margin-bottom: 0;
     background-color: transparent;
@@ -1266,6 +1330,7 @@ html, body {
 .mobile-friendly-modal {
     max-width: 90%;
     width: auto;
+    margin: 1.75rem auto;
 }
 
 /* Mobile-specific control buttons */
@@ -1279,6 +1344,9 @@ html, body {
         display: flex;
         justify-content: center;
         background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        z-index: 1000;
     }
     
     .btn-group {
@@ -1293,23 +1361,53 @@ html, body {
         margin: 0 5px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         border-width: 2px;
+        border-radius: 50%; /* Make buttons circular for better touch */
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .control-btn i {
         font-size: 1.5rem;
     }
+    
+    /* Improved tap targets */
+    .form-check-input, 
+    .form-range, 
+    .nav-link,
+    .btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    /* Adjust tabs for better touch */
+    .nav-tabs .nav-link {
+        padding: 12px 15px;
+        font-size: 16px;
+    }
+    
+    /* Fix modal scrolling */
+    .modal-body {
+        -webkit-overflow-scrolling: touch;
+        overflow-y: auto;
+        max-height: 70vh;
+    }
 }
 
-/* Small mobile screens */
+/* Small mobile screens (phones) */
 @media (max-width: 576px) {
     .control-buttons {
         padding: 0.75rem 0.5rem;
     }
     
     .control-btn {
-        width: calc(25% - 10px);
+        width: 50px;
         height: 50px;
-        margin: 0 5px;
+        margin: 0 3px;
+    }
+    
+    .control-btn i {
+        font-size: 1.25rem;
     }
     
     .modal-dialog.mobile-friendly-modal {
@@ -1321,42 +1419,84 @@ html, body {
         border-radius: 0.5rem;
     }
     
-    .nav-tabs .nav-link {
-        padding: 0.5rem;
-        font-size: 0.875rem;
-    }
-    
-    /* Make form controls larger for touch targets */
+    /* Adjust form controls for better touch */
     .form-range {
-        height: 2rem;
+        height: 26px; /* Ensure enough touch area */
+        padding: 8px 0;
     }
     
     .form-check-input {
-        width: 1.25rem;
-        height: 1.25rem;
+        width: 1.5em;
+        height: 1.5em;
     }
     
-    /* Adjust variation cards for smaller screens */
-    .variation-cards-grid {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
+    /* Smaller font sizes for better fit */
+    .setting-label {
+        font-size: 14px;
     }
     
-    /* Adjust chart size for smaller screens */
-    .chart-container {
-        height: 250px !important;
-    }
-    
-    /* Smaller rules graph on mobile */
-    .rules-graph-container {
-        max-height: 300px;
-        overflow: hidden;
-    }
-    
-    /* Make table headers and rows smaller on mobile */
+    /* Adjust tables for small screens */
     .table-sm th, .table-sm td {
-        padding: 0.25rem;
-        font-size: 0.75rem;
+        padding: 6px;
+        font-size: 12px;
+    }
+    
+    /* Stack the variations layout */
+    .variations-layout {
+        flex-direction: column;
+    }
+    
+    .variations-cards-column,
+    .variations-rules-column {
+        width: 100%;
+    }
+}
+
+/* Special handling for very small screens */
+@media (max-width: 360px) {
+    .control-btn {
+        width: 45px;
+        height: 45px;
+        margin: 0 2px;
+    }
+    
+    .setting-label {
+        font-size: 13px;
+    }
+    
+    .variations-cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+    
+    .control-btn i {
+        font-size: 1.1rem;
+    }
+}
+
+/* Touch-specific optimizations regardless of screen size */
+@media (hover: none) and (pointer: coarse) {
+    .btn, .form-range, .form-check-input {
+        cursor: default;
+    }
+    
+    .control-btn {
+        transition: transform 0.2s;
+    }
+    
+    .control-btn:active {
+        transform: scale(0.95);
+        opacity: 0.9;
+    }
+    
+    /* Increase spacing between interactive elements */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Make scrolling smooth on touch devices */
+    .modal-body,
+    .variations-cards-column {
+        -webkit-overflow-scrolling: touch;
     }
 }
 
