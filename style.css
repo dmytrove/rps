@@ -1,55 +1,391 @@
+/* Global Styles */
 body {
-    background-color: black;
+    background-color: #0a0e17;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #f8f9fa;
 }
 
 #gameCanvas {
     display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    background: radial-gradient(circle at center, rgba(20, 30, 48, 0.5) 0%, rgba(10, 14, 23, 0.7) 70%);
 }
 
-/* Override Bootstrap dark table styles for better visibility */
-.table-dark {
-    --bs-table-bg: transparent;
+/* Control Buttons */
+.position-fixed.top-0.end-0 {
+    z-index: 2000;
 }
 
-/* Common panel styles */
-#controlsPanel,
+.btn-group .btn {
+    position: relative;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    margin: 0 2px;
+    transition: all 0.3s ease;
+    z-index: inherit;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: #1a1f2c;
+}
+
+.btn-group .btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    background: #2a3142;
+}
+
+.btn-group .btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-group .btn i {
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Winner Notification */
+#winnerNotification {
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    text-align: center;
+    border-radius: 15px;
+    padding: 1.5rem 2.5rem !important;
+    background: rgba(26, 31, 44, 0.9) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 255, 255, 0.1) inset;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: pulse 2s infinite, fadeIn 0.5s ease-out;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.05); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Panel Container */
+.position-fixed.bottom-0.start-0.end-0 {
+    z-index: 1500;
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(10px);
+    background: rgba(26, 31, 44, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+/* Panel Styles */
 #graphContainer,
 #historyContainer {
     height: 33vh;
-    opacity: 0.9;
-    transition: opacity 0.3s ease;
+    opacity: 0.95;
+    transition: all 0.3s ease;
+    display: block;
 }
 
-#controlsPanel:hover,
 #graphContainer:hover,
 #historyContainer:hover {
     opacity: 1;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 15px rgba(78, 115, 223, 0.1);
+    transform: translateY(-5px);
 }
 
-#controlsPanel .card-body,
 #graphContainer .card-body,
 #historyContainer .card-body {
     height: 100%;
-    overflow: auto;
+    padding: 1rem;
 }
 
-#controlsPanel.hidden,
+#graphContainer .card-body,
+#historyContainer .card-body {
+    overflow: auto; /* Allow scrolling in other panels if needed */
+}
+
 #graphContainer.hidden,
 #historyContainer.hidden {
     display: none !important;
 }
 
-#historyContainer {
-    overflow-y: auto;
+/* Compact Controls Styling */
+.compact-controls {
+    max-width: 240px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; /* Distribute space evenly now that the restart button is gone */
 }
 
+.compact-group {
+    margin-bottom: 0.3rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease;
+}
+
+.compact-group:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Emoji Label Styling */
+.form-label {
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    color: #d1d3e2;
+}
+
+.settings-label {
+    display: none;
+}
+
+@media (max-width: 500px) {
+    .settings-label {
+        display: none;
+    }
+}
+
+/* Auto-Apply Styling */
+.auto-apply {
+    cursor: pointer;
+}
+
+.auto-apply:active + .auto-apply-indicator,
+.auto-apply:focus + .auto-apply-indicator {
+    opacity: 1;
+}
+
+/* Form Elements */
 .form-range {
-    max-width: 150px;
+    max-width: 100%;
+    accent-color: #4e73df;
+    height: 6px;
 }
 
-/* Ensure chart takes full height of its container */
+.mini-range {
+    height: 4px;
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+}
+
+.form-range::-webkit-slider-thumb {
+    box-shadow: 0 0 5px rgba(78, 115, 223, 0.5);
+}
+
+.form-group {
+    margin-bottom: 0.3rem;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.form-check-input {
+    margin-top: 0;
+    cursor: pointer;
+}
+
+.form-check-label {
+    margin-left: 0.3rem;
+    cursor: pointer;
+}
+
+/* Ensure proper spacing in the Refresh control */
+.form-group .badge + .form-check {
+    margin-left: 0.5rem;
+}
+
+/* Tooltip styling (extend) */
+.form-check-label.tooltip-trigger {
+    font-size: 0.8rem;
+}
+
+/* Badges */
+.badge {
+    padding: 0.35em 0.65em;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Graph Styles */
 #distributionGraph {
     height: 100% !important;
+    width: 100% !important;
+}
+
+/* Refresh Control in Graph Panel */
+.refresh-control {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 0.3rem 0.6rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 5;
+    transition: all 0.3s ease;
+}
+
+.refresh-control:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.refresh-control .badge {
+    box-shadow: none;
+}
+
+.refresh-control .form-check-label {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+/* Table Styles */
+.table-dark {
+    --bs-table-bg: transparent;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.85rem;
+}
+
+.table-dark th {
+    border-color: rgba(255, 255, 255, 0.1);
+    font-weight: 600;
+    padding: 0.5rem;
+    color: #4e73df;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.table-dark td {
+    border-color: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem;
+    vertical-align: middle;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(78, 115, 223, 0.5);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(78, 115, 223, 0.7);
+}
+
+/* Auto-apply animation */
+@keyframes applyPulse {
+    0% { opacity: 0.2; }
+    50% { opacity: 1; }
+    100% { opacity: 0.2; }
+}
+
+/* Auto-apply animation */
+@keyframes auto-apply-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(79, 209, 197, 0.4); }
+    70% { box-shadow: 0 0 0 6px rgba(79, 209, 197, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(79, 209, 197, 0); }
+}
+
+.auto-apply:active {
+    animation: auto-apply-pulse 1s ease-out;
+}
+
+/* Auto-apply badge styling */
+.auto-apply-badge {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background-color: #4fd1c5;
+    color: #1a1f2c;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.auto-apply-badge.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Enhance form controls for better feedback */
+.form-range:focus {
+    box-shadow: 0 0 0 3px rgba(79, 209, 197, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: #4fd1c5;
+    border-color: #4fd1c5;
+}
+
+/* Improve tooltip styling */
+.tooltip .tooltip-inner {
+    background-color: #2a3142;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 200px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .position-fixed.bottom-0.start-0.end-0 {
+        margin-bottom: 1rem;
+    }
+    
+    #graphContainer, 
+    #historyContainer {
+        height: 30vh;
+    }
+    
+    .refresh-control {
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+    }
+}
+
+/* Overlay the game canvas with a subtle pattern for more texture */
+#gameCanvas::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjMDAwMDAwMDUiPjwvcmVjdD4KPHBhdGggZD0iTTAgNUw1IDBaTTYgNEw0IDZaTS0xIDFMMSAtMVoiIHN0cm9rZT0iIzRlNzNkZjA1IiBzdHJva2Utd2lkdGg9IjAuNSI+PC9wYXRoPgo8L3N2Zz4=');
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.2;
 }
 
 #scene-container {
@@ -64,4 +400,1116 @@ body {
 .container {
     position: relative;
     z-index: 1;
+}
+
+/* Tooltip styling */
+.tooltip-trigger {
+    position: relative;
+    cursor: help;
+    font-size: 1.2rem;
+}
+
+.tooltip-trigger:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 4px 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    z-index: 100;
+    pointer-events: none;
+    opacity: 0;
+    animation: fadeIn 0.2s ease-in-out forwards;
+}
+
+.tooltip-trigger:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.8) transparent transparent transparent;
+    z-index: 100;
+    opacity: 0;
+    animation: fadeIn 0.2s ease-in-out forwards;
+}
+
+/* Modal Settings */
+.modal {
+    z-index: 2000; /* Ensure it's above other elements */
+}
+
+.modal-content {
+    background-color: rgba(26, 31, 44, 0.95) !important;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+}
+
+.modal-header, .modal-footer {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.modal-title {
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Nav Tabs Styling */
+.nav-tabs {
+    border-bottom: 1px solid rgba(78, 115, 223, 0.3);
+}
+
+.nav-tabs .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    border-bottom: none;
+    position: relative;
+    padding: 0.6rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #fff;
+    background-color: rgba(79, 209, 197, 0.1);
+    border-color: transparent;
+}
+
+.nav-tabs .nav-link.active {
+    color: #4fd1c5;
+    background-color: rgba(79, 209, 197, 0.15);
+    border-color: rgba(79, 209, 197, 0.5);
+    border-bottom: none;
+}
+
+/* Settings Tab Content */
+.controls-container {
+    max-width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; /* Distribute space evenly now that the restart button is gone */
+}
+
+.form-group {
+    margin-bottom: 0.3rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    transition: background 0.3s ease;
+}
+
+.form-group:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.setting-label {
+    margin-left: 0.3rem;
+    display: inline-block;
+    font-size: 0.9rem;
+}
+
+/* Variation Tab Styling */
+.variation-description {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 1rem;
+    line-height: 1.6;
+}
+
+.current-variation-info {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-color: rgba(79, 209, 197, 0.2) !important;
+    position: relative;
+}
+
+.current-variation-name {
+    font-size: 1.4rem;
+    font-weight: 600;
+    background: linear-gradient(90deg, #4fd1c5, #38b2ac);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.current-variation-emoji {
+    display: flex;
+    gap: 8px;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.current-variation-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, transparent 0%, transparent 50%, rgba(79, 209, 197, 0.5) 50%, rgba(79, 209, 197, 0.2) 100%);
+    border-top-right-radius: 3px;
+}
+
+.form-select {
+    background-color: rgba(26, 31, 44, 0.9) !important;
+    border-color: rgba(78, 115, 223, 0.3);
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.form-select:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+}
+
+@media (max-width: 500px) {
+    .setting-label {
+        display: none; /* Hide text labels on very small screens, show only emojis */
+    }
+}
+
+/* Rules Graph Styling */
+.rules-graph-container {
+    background-color: rgba(30, 41, 59, 0.4);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    min-height: 450px;
+}
+
+/* Fixed dimensions for the SVG graph container */
+#rulesGraph {
+    position: relative;
+    width: 100%;
+    min-height: 450px;
+    max-height: 100%;
+    overflow: visible;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* Direct container for the SVG diagram */
+#rulesGraph > div {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* The actual SVG div */
+#rulesGraph > div > div {
+    height: 100%;
+    width: 100%;
+}
+
+/* SVG styling for proper display */
+#rulesGraph svg {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none;
+    max-height: none;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .variations-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .variations-cards-column {
+        max-height: 300px;
+    }
+    
+    .variations-rules-column {
+        min-height: 400px;
+    }
+    
+    .node-circle {
+        r: 35;
+    }
+    
+    .node-emoji {
+        font-size: 24px;
+    }
+    
+    .node-name {
+        font-size: 12px;
+    }
+    
+    .verb-text {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    #rulesGraph {
+        min-height: 350px;
+    }
+    
+    .svg-graph-container {
+        min-height: 350px;
+    }
+    
+    .node-circle {
+        r: 30;
+    }
+    
+    .node-emoji {
+        font-size: 20px;
+    }
+    
+    .node-name {
+        font-size: 10px;
+    }
+}
+
+/* Alert box for graph errors */
+.rules-graph-container .alert {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* SVG Graph styles are now used instead of mermaid */
+
+/* Rules graph animation */
+@keyframes graph-fade-in {
+    0% { opacity: 0; transform: scale(0.9); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+.rules-graph-container .mermaid {
+    animation: graph-fade-in 0.6s ease-out;
+}
+
+/* Variation selector styling */
+#variationSelector {
+    background-color: rgba(26, 31, 44, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 16px;
+    width: 100%;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+#variationSelector:focus {
+    border-color: #4fd1c5;
+    box-shadow: 0 0 0 3px rgba(79, 209, 197, 0.25);
+    outline: none;
+}
+
+#variationSelector option {
+    background-color: #1a1f2c;
+    color: white;
+    padding: 8px;
+}
+
+/* Variation description styling */
+#currentVariationDesc, #variationDescription {
+    line-height: 1.5;
+    padding: 10px 0;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+#currentVariationName {
+    font-size: 1.4rem;
+    font-weight: 600;
+    background: linear-gradient(90deg, #4fd1c5, #38b2ac);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+}
+
+/* New grid layout for variation cards */
+.variation-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+/* Scrollbar for variation cards */
+.variation-cards-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.variation-cards-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.variation-cards-container::-webkit-scrollbar-thumb {
+    background: rgba(79, 209, 197, 0.5);
+    border-radius: 10px;
+}
+
+/* Variation card styling - smaller cards for the grid */
+.variation-card {
+    background-color: rgba(26, 31, 44, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Simplify cards to show only most important info */
+.variation-card .card-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.variation-card .card-emoji {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+/* Selection indicator */
+.variation-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #4fd1c5, #38b2ac);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: bottom left;
+}
+
+.variation-card.selected::after {
+    transform: scaleX(1);
+}
+
+/* Card animation */
+@keyframes card-pop {
+    0% { transform: scale(0.95); opacity: 0.7; }
+    70% { transform: scale(1.03); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.variation-card.new-card {
+    animation: card-pop 0.3s forwards;
+}
+
+/* Emoji icon styling */
+.emoji-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    margin-right: 4px;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.emoji-icon:hover {
+    transform: scale(1.1);
+    background-color: rgba(79, 209, 197, 0.1);
+}
+
+/* Enhanced card hover effects */
+.variation-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-color: rgba(79, 209, 197, 0.5);
+}
+
+.variation-card.selected {
+    border: 2px solid #4fd1c5;
+    background-color: rgba(79, 209, 197, 0.1);
+}
+
+.variation-card .mini-graph {
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.variation-card .mini-graph svg {
+    max-width: 100%;
+    max-height: 100%;
+    transform: scale(0.8);
+}
+
+/* Modal improvements for tab layout */
+.modal-dialog {
+    max-width: 700px;
+}
+
+.modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* Graph tab styles */
+.chart-container {
+    width: 100%;
+    height: 350px;
+    position: relative;
+    margin-bottom: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* History table styles */
+.table-responsive {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.table-dark {
+    margin-bottom: 0;
+    background-color: transparent;
+}
+
+.table-dark th {
+    background-color: rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    border-color: rgba(255, 255, 255, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+/* Draggable Modal Styles */
+.draggable-modal {
+    user-select: none;
+    transition: none;
+}
+
+.draggable-modal .modal-header {
+    cursor: move;
+}
+
+.draggable-modal.dragging {
+    opacity: 0.9;
+}
+
+/* Fix for modals without backdrop */
+.modal:not([data-bs-backdrop="true"]) {
+    background-color: transparent;
+}
+
+/* Allow game to be visible behind modal */
+.modal-backdrop {
+    display: none;
+}
+
+/* Increase modal z-index to ensure it's above other elements */
+.modal {
+    z-index: 1100;
+}
+
+.table-dark td .badge.rounded-pill {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.table-dark td .badge.rounded-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Motion blur effect for items */
+#gameCanvas.motion-blur {
+    filter: blur(0.5px);
+}
+
+/* Styling for initial conditions pills cell */
+.initial-pills-cell {
+    max-width: 200px;
+}
+
+.initial-pills-cell .d-flex {
+    min-height: 30px;
+}
+
+.initial-pills-cell .badge {
+    margin: 2px;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.4rem;
+    white-space: nowrap;
+}
+
+/* Updated pill hover effect */
+.badge.rounded-pill:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* New grid layout for variation cards */
+.variation-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+/* Variation card */
+.variation-card {
+    background-color: #2d3748;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.variation-card:hover {
+    background-color: #3a4a63;
+    transform: translateY(-3px);
+}
+
+.variation-card.active {
+    border-color: #38b2ac;
+    box-shadow: 0 0 10px rgba(56, 178, 172, 0.5);
+}
+
+.variation-card .card-emojis {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.variation-card .card-name {
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Rules diagram */
+.rules-diagram {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.rules-node {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.rules-arrow {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    color: white;
+}
+
+.rules-explanation {
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: rgba(45, 55, 72, 0.7);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+/* Base styling for responsive elements */
+html, body {
+    touch-action: manipulation;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Mobile-friendly control buttons */
+.control-buttons {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.control-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-left: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-btn i {
+    font-size: 1.25rem;
+}
+
+/* Mobile-specific control buttons */
+@media (max-width: 768px) {
+    .control-buttons {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 1rem;
+        display: flex;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    
+    .btn-group {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+    }
+    
+    .control-btn {
+        width: 60px;
+        height: 60px;
+        margin: 0 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        border-width: 2px;
+    }
+    
+    .control-btn i {
+        font-size: 1.5rem;
+    }
+}
+
+/* Small mobile screens */
+@media (max-width: 576px) {
+    .control-buttons {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .control-btn {
+        width: calc(25% - 10px);
+        height: 50px;
+        margin: 0 5px;
+    }
+}
+
+/* Rules graph SVG responsive styling */
+.rules-graph-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 60%;
+    overflow: hidden;
+}
+
+.svg-graph-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+}
+
+.svg-graph-container svg {
+    max-width: 100%;
+    height: auto;
+    max-height: 450px;
+}
+
+/* Media queries for different screen sizes */
+@media (max-width: 992px) {
+    .node-circle {
+        r: 35;
+    }
+    
+    .node-emoji {
+        font-size: 20px;
+    }
+    
+    .node-name {
+        font-size: 12px;
+    }
+    
+    .verb-text {
+        font-size: 12px;
+    }
+    
+    /* Variations layout adjustments for tablets */
+    .variations-layout {
+        gap: 15px;
+    }
+    
+    .variations-cards-column {
+        flex: 1;
+    }
+    
+    .variations-rules-column {
+        flex: 1;
+    }
+    
+    .variations-rules-column .rules-graph-container {
+        height: 450px;
+    }
+    
+    .variations-cards-column .variation-cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .control-btn {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .node-circle {
+        r: 30;
+    }
+    
+    .modal-body {
+        padding: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .control-btn {
+        width: 40px;
+        height: 40px;
+        margin-left: 0.25rem;
+    }
+    
+    .control-btn i {
+        font-size: 1rem;
+    }
+    
+    .node-circle {
+        r: 25;
+    }
+    
+    .node-emoji {
+        font-size: 16px;
+    }
+    
+    .node-name {
+        font-size: 10px;
+    }
+}
+
+/* Add styles for touch-friendly games */
+@media (hover: none) and (pointer: coarse) {
+    .btn, .form-range, .form-check-input {
+        cursor: default;
+    }
+    
+    .control-btn {
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .control-btn:active {
+        transform: translateY(2px);
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+    }
+}
+
+/* Improve game canvas display */
+#gameCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: none;
+}
+
+/* Mobile-friendly modal */
+.mobile-friendly-modal {
+    max-width: 90%;
+    width: auto;
+}
+
+/* Mobile-specific control buttons */
+@media (max-width: 768px) {
+    .control-buttons {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 1rem;
+        display: flex;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    
+    .btn-group {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+    }
+    
+    .control-btn {
+        width: 60px;
+        height: 60px;
+        margin: 0 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        border-width: 2px;
+    }
+    
+    .control-btn i {
+        font-size: 1.5rem;
+    }
+}
+
+/* Small mobile screens */
+@media (max-width: 576px) {
+    .control-buttons {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .control-btn {
+        width: calc(25% - 10px);
+        height: 50px;
+        margin: 0 5px;
+    }
+    
+    .modal-dialog.mobile-friendly-modal {
+        margin: 0.5rem auto;
+        max-width: 95%;
+    }
+    
+    .modal-content {
+        border-radius: 0.5rem;
+    }
+    
+    .nav-tabs .nav-link {
+        padding: 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Make form controls larger for touch targets */
+    .form-range {
+        height: 2rem;
+    }
+    
+    .form-check-input {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+    
+    /* Adjust variation cards for smaller screens */
+    .variation-cards-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    /* Adjust chart size for smaller screens */
+    .chart-container {
+        height: 250px !important;
+    }
+    
+    /* Smaller rules graph on mobile */
+    .rules-graph-container {
+        max-height: 300px;
+        overflow: hidden;
+    }
+    
+    /* Make table headers and rows smaller on mobile */
+    .table-sm th, .table-sm td {
+        padding: 0.25rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Node styles for the SVG graph */
+.node-circle {
+    fill: #2c3e50;
+    stroke: #3498db;
+    stroke-width: 3;
+    transition: transform 0.2s ease, fill 0.2s ease;
+}
+
+.node-circle:hover {
+    transform: scale(1.1);
+    fill: #34495e;
+}
+
+.node-emoji {
+    font-size: 24px;
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+
+.node-name {
+    fill: #ecf0f1;
+    font-size: 12px;
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+
+.verb-label {
+    fill: #ecf0f1;
+    font-size: 14px;
+    text-anchor: middle;
+    dominant-baseline: middle;
+}
+
+/* Mobile adjustments for graph */
+@media (max-width: 576px) {
+    .node-circle {
+        r: 25;
+    }
+    
+    .node-emoji {
+        font-size: 16px;
+    }
+    
+    .node-name {
+        font-size: 10px;
+    }
+    
+    .verb-label {
+        font-size: 10px;
+    }
+}
+
+/* Variation controls styling */
+.variation-control {
+    background-color: rgba(30, 41, 59, 0.7);
+    border-radius: 8px;
+    padding: 8px 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+}
+
+.variation-control:hover {
+    background-color: rgba(30, 41, 59, 0.9);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.variation-control .badge {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.variation-control .form-check-label {
+    color: white;
+    font-size: 0.85rem;
+    margin-left: 4px;
+}
+
+/* Variations layout - two column for desktop, stacked for mobile */
+.variations-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    height: 100%;
+    max-height: 600px;
+}
+
+.variations-cards-column {
+    overflow-y: auto;
+    max-height: 600px;
+    padding-right: 10px;
+}
+
+.variations-rules-column {
+    display: flex;
+    flex-direction: column;
+    min-height: 450px;
+    max-height: 600px;
+}
+
+.variations-rules-column .rules-graph-container {
+    flex: 1;
+    min-height: 450px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}
+
+.svg-graph-container {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+}
+
+.svg-graph-container svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Mobile layout adjustments */
+@media (max-width: 768px) {
+    .variations-layout {
+        flex-direction: column;
+    }
+    
+    .variations-rules-column {
+        order: -1; /* Keep rules on top on mobile */
+        min-width: 100% !important;
+    }
+    
+    .variations-cards-column {
+        max-height: none; /* Remove height limit on mobile */
+        overflow-y: visible;
+        padding-right: 0;
+        min-width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .variations-rules-column .rules-graph-container {
+        height: 350px;
+        margin-bottom: 15px;
+    }
+    
+    .variations-cards-column .variation-cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    }
 }

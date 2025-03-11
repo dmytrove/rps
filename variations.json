@@ -1,0 +1,679 @@
+{
+    "classic": {
+        "name": "Classic RPS",
+        "types": {
+            "ROCK": "🪨",
+            "PAPER": "📄",
+            "SCISSORS": "✂️"
+        },
+        "colors": {
+            "ROCK": "#ef4444",
+            "PAPER": "#3b82f6",
+            "SCISSORS": "#22c55e"
+        },
+        "rules": [
+            { "winner": "rock", "loser": "scissors", "verb": "crushes" },
+            { "winner": "scissors", "loser": "paper", "verb": "cuts" },
+            { "winner": "paper", "loser": "rock", "verb": "covers" }
+        ]
+    },
+    "elemental": {
+        "name": "Elemental",
+        "types": {
+            "FIRE": "🔥",
+            "GRASS": "🌿",
+            "WATER": "💧"
+        },
+        "colors": {
+            "FIRE": "#ef4444",
+            "GRASS": "#22c55e",
+            "WATER": "#3b82f6"
+        },
+        "rules": [
+            { "winner": "fire", "loser": "grass", "verb": "burns" },
+            { "winner": "grass", "loser": "water", "verb": "absorbs" },
+            { "winner": "water", "loser": "fire", "verb": "extinguishes" }
+        ]
+    },
+    "space": {
+        "name": "Space",
+        "types": {
+            "ROCKET": "🚀",
+            "PLANET": "🪐",
+            "METEOR": "☄️"
+        },
+        "colors": {
+            "ROCKET": "#3b82f6",
+            "PLANET": "#22c55e",
+            "METEOR": "#ef4444"
+        },
+        "rules": [
+            { "winner": "rocket", "loser": "planet", "verb": "flies around" },
+            { "winner": "planet", "loser": "meteor", "verb": "gravitates" },
+            { "winner": "meteor", "loser": "rocket", "verb": "crashes into" }
+        ]
+    },
+    "weather": {
+        "name": "Weather",
+        "types": {
+            "SUN": "☀️",
+            "RAIN": "🌧️",
+            "SNOW": "❄️"
+        },
+        "colors": {
+            "SUN": "#f59e0b",
+            "RAIN": "#3b82f6",
+            "SNOW": "#e5e7eb"
+        },
+        "rules": [
+            { "winner": "sun", "loser": "rain", "verb": "dries up" },
+            { "winner": "rain", "loser": "snow", "verb": "dampens" },
+            { "winner": "snow", "loser": "sun", "verb": "reflects" }
+        ]
+    },
+    "animals": {
+        "name": "Animals",
+        "types": {
+            "TIGER": "🐯",
+            "WOLF": "🐺",
+            "FOX": "🦊"
+        },
+        "colors": {
+            "TIGER": "#f59e0b",
+            "WOLF": "#6b7280",
+            "FOX": "#ef4444"
+        },
+        "rules": [
+            { "winner": "tiger", "loser": "wolf", "verb": "hunts" },
+            { "winner": "wolf", "loser": "fox", "verb": "chases" },
+            { "winner": "fox", "loser": "tiger", "verb": "outwits" }
+        ]
+    },
+    "food": {
+        "name": "Food",
+        "types": {
+            "BURGER": "🍔",
+            "PIZZA": "🍕",
+            "TACO": "🌮"
+        },
+        "colors": {
+            "BURGER": "#b45309",
+            "PIZZA": "#ef4444",
+            "TACO": "#f59e0b"
+        },
+        "rules": [
+            { "winner": "burger", "loser": "pizza", "verb": "satisfies" },
+            { "winner": "pizza", "loser": "taco", "verb": "outsells" },
+            { "winner": "taco", "loser": "burger", "verb": "spices up" }
+        ]
+    },
+    "tech": {
+        "name": "Tech",
+        "types": {
+            "COMPUTER": "💻",
+            "PHONE": "📱",
+            "CAMERA": "📷"
+        },
+        "colors": {
+            "COMPUTER": "#3b82f6",
+            "PHONE": "#8b5cf6",
+            "CAMERA": "#10b981"
+        },
+        "rules": [
+            { "winner": "computer", "loser": "phone", "verb": "calculates" },
+            { "winner": "phone", "loser": "camera", "verb": "connects" },
+            { "winner": "camera", "loser": "computer", "verb": "captures" }
+        ]
+    },
+    "emotions": {
+        "name": "Emotions",
+        "types": {
+            "HAPPY": "😊",
+            "SAD": "😢",
+            "ANGRY": "😡"
+        },
+        "colors": {
+            "HAPPY": "#f59e0b",
+            "SAD": "#3b82f6",
+            "ANGRY": "#ef4444"
+        },
+        "rules": [
+            { "winner": "happy", "loser": "sad", "verb": "cheers up" },
+            { "winner": "sad", "loser": "angry", "verb": "deepens" },
+            { "winner": "angry", "loser": "happy", "verb": "disrupts" }
+        ]
+    },
+    "fantasy": {
+        "name": "Fantasy",
+        "types": {
+            "WIZARD": "🧙",
+            "ELF": "🧝",
+            "DRAGON": "🐉"
+        },
+        "colors": {
+            "WIZARD": "#8b5cf6",
+            "ELF": "#10b981",
+            "DRAGON": "#ef4444"
+        },
+        "rules": [
+            { "winner": "wizard", "loser": "elf", "verb": "casts spell on" },
+            { "winner": "elf", "loser": "dragon", "verb": "outruns" },
+            { "winner": "dragon", "loser": "wizard", "verb": "burns" }
+        ]
+    },
+    "music": {
+        "name": "Music",
+        "types": {
+            "GUITAR": "🎸",
+            "PIANO": "🎹",
+            "DRUMS": "🥁"
+        },
+        "colors": {
+            "GUITAR": "#ef4444",
+            "PIANO": "#3b82f6",
+            "DRUMS": "#f59e0b"
+        },
+        "rules": [
+            { "winner": "guitar", "loser": "piano", "verb": "drowns out" },
+            { "winner": "piano", "loser": "drums", "verb": "outclasses" },
+            { "winner": "drums", "loser": "guitar", "verb": "overpowers" }
+        ]
+    },
+    "sports": {
+        "name": "Sports",
+        "types": {
+            "SOCCER": "⚽",
+            "FOOTBALL": "🏈",
+            "BASKETBALL": "🏀"
+        },
+        "colors": {
+            "SOCCER": "#10b981",
+            "FOOTBALL": "#b45309",
+            "BASKETBALL": "#f59e0b"
+        },
+        "rules": [
+            { "winner": "soccer", "loser": "football", "verb": "outplays" },
+            { "winner": "football", "loser": "basketball", "verb": "tackles" },
+            { "winner": "basketball", "loser": "soccer", "verb": "outscores" }
+        ]
+    },
+    "sea": {
+        "name": "Sea Creatures",
+        "types": {
+            "SHARK": "🦈",
+            "PUFFERFISH": "🐡",
+            "OCTOPUS": "🐙"
+        },
+        "colors": {
+            "SHARK": "#3b82f6",
+            "PUFFERFISH": "#f59e0b",
+            "OCTOPUS": "#8b5cf6"
+        },
+        "rules": [
+            { "winner": "shark", "loser": "pufferfish", "verb": "hunts" },
+            { "winner": "pufferfish", "loser": "octopus", "verb": "poisons" },
+            { "winner": "octopus", "loser": "shark", "verb": "outsmarts" }
+        ]
+    },
+    "fruits": {
+        "name": "Fruits",
+        "types": {
+            "APPLE": "🍎",
+            "BANANA": "🍌",
+            "GRAPES": "🍇"
+        },
+        "colors": {
+            "APPLE": "#ef4444",
+            "BANANA": "#f59e0b",
+            "GRAPES": "#8b5cf6"
+        },
+        "rules": [
+            { "winner": "apple", "loser": "banana", "verb": "outlasts" },
+            { "winner": "banana", "loser": "grapes", "verb": "outsells" },
+            { "winner": "grapes", "loser": "apple", "verb": "outnumbers" }
+        ]
+    },
+    "transportation": {
+        "name": "Transportation",
+        "types": {
+            "PLANE": "✈️",
+            "CAR": "🚗",
+            "SHIP": "🚢"
+        },
+        "colors": {
+            "PLANE": "#3b82f6",
+            "CAR": "#ef4444",
+            "SHIP": "#10b981"
+        },
+        "rules": [
+            { "winner": "plane", "loser": "car", "verb": "flies over" },
+            { "winner": "car", "loser": "ship", "verb": "outraces" },
+            { "winner": "ship", "loser": "plane", "verb": "carries" }
+        ]
+    },
+    "celestial": {
+        "name": "Celestial",
+        "types": {
+            "EARTH": "🌎",
+            "MOON": "🌕",
+            "SUN": "☀️"
+        },
+        "colors": {
+            "EARTH": "#10b981",
+            "MOON": "#9ca3af",
+            "SUN": "#f59e0b"
+        },
+        "rules": [
+            { "winner": "earth", "loser": "moon", "verb": "supports" },
+            { "winner": "moon", "loser": "sun", "verb": "orbits" },
+            { "winner": "sun", "loser": "earth", "verb": "sustains" }
+        ]
+    },
+    "insects": {
+        "name": "Insects",
+        "types": {
+            "BEE": "🐝",
+            "CRICKET": "🦗",
+            "ANT": "🐜"
+        },
+        "colors": {
+            "BEE": "#f59e0b",
+            "CRICKET": "#10b981",
+            "ANT": "#6b7280"
+        },
+        "rules": [
+            { "winner": "bee", "loser": "cricket", "verb": "stings" },
+            { "winner": "cricket", "loser": "ant", "verb": "outjumps" },
+            { "winner": "ant", "loser": "bee", "verb": "outnumbers" }
+        ]
+    },
+    "buildings": {
+        "name": "Buildings",
+        "types": {
+            "SKYSCRAPER": "🏢",
+            "HOUSE": "🏠",
+            "CASTLE": "🏰"
+        },
+        "colors": {
+            "SKYSCRAPER": "#3b82f6",
+            "HOUSE": "#10b981",
+            "CASTLE": "#8b5cf6"
+        },
+        "rules": [
+            { "winner": "skyscraper", "loser": "house", "verb": "overshadows" },
+            { "winner": "house", "loser": "castle", "verb": "outpopulates" },
+            { "winner": "castle", "loser": "skyscraper", "verb": "outlasts" }
+        ]
+    },
+    "seasons": {
+        "name": "Seasons",
+        "types": {
+            "SUMMER": "🌞",
+            "WINTER": "❄️",
+            "FALL": "🍂"
+        },
+        "colors": {
+            "SUMMER": "#f59e0b",
+            "WINTER": "#9ca3af",
+            "FALL": "#b45309"
+        },
+        "rules": [
+            { "winner": "summer", "loser": "winter", "verb": "warms" },
+            { "winner": "winter", "loser": "fall", "verb": "freezes" },
+            { "winner": "fall", "loser": "summer", "verb": "succeeds" }
+        ]
+    },
+    "desserts": {
+        "name": "Desserts",
+        "types": {
+            "ICECREAM": "🍦",
+            "CAKE": "🍰",
+            "COOKIE": "🍪"
+        },
+        "colors": {
+            "ICECREAM": "#e5e7eb",
+            "CAKE": "#f472b6",
+            "COOKIE": "#b45309"
+        },
+        "rules": [
+            { "winner": "icecream", "loser": "cake", "verb": "cools down" },
+            { "winner": "cake", "loser": "cookie", "verb": "outserves" },
+            { "winner": "cookie", "loser": "icecream", "verb": "complements" }
+        ]
+    },
+    "rpg": {
+        "name": "RPG Classes",
+        "types": {
+            "WARRIOR": "⚔️",
+            "ARCHER": "🏹",
+            "MAGE": "🧙‍♂️"
+        },
+        "colors": {
+            "WARRIOR": "#ef4444",
+            "ARCHER": "#10b981",
+            "MAGE": "#8b5cf6"
+        },
+        "rules": [
+            { "winner": "warrior", "loser": "archer", "verb": "overpowers" },
+            { "winner": "archer", "loser": "mage", "verb": "outranges" },
+            { "winner": "mage", "loser": "warrior", "verb": "outspells" }
+        ]
+    },
+    "rpsls": {
+        "name": "Rock Paper Scissors Lizard Spock",
+        "types": {
+            "ROCK": "🪨",
+            "PAPER": "📄",
+            "SCISSORS": "✂️",
+            "LIZARD": "🦎",
+            "SPOCK": "🖖"
+        },
+        "colors": {
+            "ROCK": "#ef4444",
+            "PAPER": "#3b82f6",
+            "SCISSORS": "#22c55e",
+            "LIZARD": "#10b981",
+            "SPOCK": "#8b5cf6"
+        },
+        "rules": [
+            { "winner": "rock", "loser": "scissors", "verb": "crushes" },
+            { "winner": "rock", "loser": "lizard", "verb": "crushes" },
+            { "winner": "paper", "loser": "rock", "verb": "covers" },
+            { "winner": "paper", "loser": "spock", "verb": "disproves" },
+            { "winner": "scissors", "loser": "paper", "verb": "cuts" },
+            { "winner": "scissors", "loser": "lizard", "verb": "decapitates" },
+            { "winner": "lizard", "loser": "paper", "verb": "eats" },
+            { "winner": "lizard", "loser": "spock", "verb": "poisons" },
+            { "winner": "spock", "loser": "rock", "verb": "vaporizes" },
+            { "winner": "spock", "loser": "scissors", "verb": "smashes" }
+        ]
+    },
+    "rpsw": {
+        "name": "Rock Paper Scissors Well",
+        "types": {
+            "ROCK": "🪨",
+            "PAPER": "📄",
+            "SCISSORS": "✂️",
+            "WELL": "🕳️"
+        },
+        "colors": {
+            "ROCK": "#ef4444",
+            "PAPER": "#3b82f6",
+            "SCISSORS": "#22c55e",
+            "WELL": "#6b7280"
+        },
+        "rules": [
+            { "winner": "rock", "loser": "scissors", "verb": "crushes" },
+            { "winner": "paper", "loser": "rock", "verb": "covers" },
+            { "winner": "scissors", "loser": "paper", "verb": "cuts" },
+            { "winner": "well", "loser": "rock", "verb": "swallows" },
+            { "winner": "paper", "loser": "well", "verb": "covers" },
+            { "winner": "well", "loser": "scissors", "verb": "catches" }
+        ]
+    },
+    "rpsfw": {
+        "name": "Rock Paper Scissors Fire Water",
+        "types": {
+            "ROCK": "🪨",
+            "PAPER": "📄",
+            "SCISSORS": "✂️",
+            "FIRE": "🔥",
+            "WATER": "💧"
+        },
+        "colors": {
+            "ROCK": "#ef4444",
+            "PAPER": "#3b82f6",
+            "SCISSORS": "#22c55e",
+            "FIRE": "#f59e0b",
+            "WATER": "#3b82f6"
+        },
+        "rules": [
+            { "winner": "rock", "loser": "scissors", "verb": "crushes" },
+            { "winner": "rock", "loser": "fire", "verb": "blocks" },
+            { "winner": "paper", "loser": "rock", "verb": "covers" },
+            { "winner": "paper", "loser": "water", "verb": "floats on" },
+            { "winner": "scissors", "loser": "paper", "verb": "cuts" },
+            { "winner": "water", "loser": "scissors", "verb": "cools" },
+            { "winner": "fire", "loser": "paper", "verb": "burns" },
+            { "winner": "fire", "loser": "water", "verb": "evaporates" },
+            { "winner": "water", "loser": "rock", "verb": "erodes" },
+            { "winner": "water", "loser": "fire", "verb": "extinguishes" }
+        ]
+    },
+    "rpsd": {
+        "name": "Rock Paper Scissors Dynamite",
+        "types": {
+            "ROCK": "🪨",
+            "PAPER": "📄",
+            "SCISSORS": "✂️",
+            "DYNAMITE": "🧨"
+        },
+        "colors": {
+            "ROCK": "#ef4444",
+            "PAPER": "#3b82f6",
+            "SCISSORS": "#22c55e",
+            "DYNAMITE": "#ef4444"
+        },
+        "rules": [
+            { "winner": "rock", "loser": "scissors", "verb": "crushes" },
+            { "winner": "paper", "loser": "rock", "verb": "covers" },
+            { "winner": "scissors", "loser": "paper", "verb": "cuts" },
+            { "winner": "dynamite", "loser": "rock", "verb": "blows up" },
+            { "winner": "dynamite", "loser": "paper", "verb": "blows up" },
+            { "winner": "dynamite", "loser": "scissors", "verb": "blows up" }
+        ]
+    },
+    "rpsaw": {
+        "name": "Rock Paper Scissors Air Water",
+        "types": {
+            "ROCK": "🪨",
+            "PAPER": "📄",
+            "SCISSORS": "✂️",
+            "AIR": "💨",
+            "WATER": "💧"
+        },
+        "colors": {
+            "ROCK": "#ef4444",
+            "PAPER": "#3b82f6",
+            "SCISSORS": "#22c55e",
+            "AIR": "#9ca3af",
+            "WATER": "#3b82f6"
+        },
+        "rules": [
+            { "winner": "rock", "loser": "air", "verb": "breaks through" },
+            { "winner": "water", "loser": "rock", "verb": "sinks" },
+            { "winner": "paper", "loser": "rock", "verb": "covers" },
+            { "winner": "paper", "loser": "water", "verb": "floats on" },
+            { "winner": "air", "loser": "paper", "verb": "blows" },
+            { "winner": "scissors", "loser": "paper", "verb": "cuts" },
+            { "winner": "scissors", "loser": "air", "verb": "cuts through" },
+            { "winner": "water", "loser": "scissors", "verb": "rusts" },
+            { "winner": "air", "loser": "rock", "verb": "erodes" },
+            { "winner": "air", "loser": "paper", "verb": "dries" },
+            { "winner": "water", "loser": "rock", "verb": "erodes" },
+            { "winner": "water", "loser": "scissors", "verb": "rusts" }
+        ]
+    },
+    "rps7": {
+        "name": "7-Way RPS",
+        "types": {
+            "ROCK": "🪨",
+            "PAPER": "📄",
+            "SCISSORS": "✂️",
+            "FIRE": "🔥",
+            "WATER": "💧",
+            "AIR": "💨",
+            "EARTH": "🪢"
+        },
+        "colors": {
+            "ROCK": "#ef4444",
+            "PAPER": "#3b82f6",
+            "SCISSORS": "#22c55e",
+            "FIRE": "#f59e0b",
+            "WATER": "#3b82f6",
+            "AIR": "#9ca3af",
+            "EARTH": "#b45309"
+        },
+        "rules": [
+            { "winner": "rock", "loser": "scissors", "verb": "crushes" },
+            { "winner": "rock", "loser": "fire", "verb": "blocks" },
+            { "winner": "paper", "loser": "rock", "verb": "covers" },
+            { "winner": "paper", "loser": "water", "verb": "absorbs" },
+            { "winner": "scissors", "loser": "paper", "verb": "cuts" },
+            { "winner": "scissors", "loser": "air", "verb": "cuts through" },
+            { "winner": "fire", "loser": "paper", "verb": "burns" },
+            { "winner": "fire", "loser": "air", "verb": "consumes" },
+            { "winner": "water", "loser": "earth", "verb": "erodes" },
+            { "winner": "water", "loser": "fire", "verb": "extinguishes" },
+            { "winner": "air", "loser": "rock", "verb": "erodes" },
+            { "winner": "air", "loser": "water", "verb": "evaporates" },
+            { "winner": "earth", "loser": "air", "verb": "absorbs" },
+            { "winner": "earth", "loser": "fire", "verb": "smothers" }
+        ]
+    },
+    "rps9": {
+        "name": "RPS-9",
+        "types": {
+            "ROCK": "🪨",
+            "PAPER": "📄",
+            "SCISSORS": "✂️",
+            "FIRE": "🔥",
+            "WATER": "💧",
+            "AIR": "💨",
+            "LIGHTNING": "⚡",
+            "SPONGE": "🧽",
+            "GUN": "🔫"
+        },
+        "colors": {
+            "ROCK": "#ef4444",
+            "PAPER": "#3b82f6",
+            "SCISSORS": "#22c55e",
+            "FIRE": "#f59e0b",
+            "WATER": "#3b82f6",
+            "AIR": "#9ca3af",
+            "LIGHTNING": "#f59e0b",
+            "SPONGE": "#10b981",
+            "GUN": "#6b7280"
+        },
+        "rules": [
+            { "winner": "rock", "loser": "scissors", "verb": "crushes" },
+            { "winner": "rock", "loser": "gun", "verb": "blocks" },
+            { "winner": "paper", "loser": "rock", "verb": "covers" },
+            { "winner": "paper", "loser": "gun", "verb": "proves illegal" },
+            { "winner": "scissors", "loser": "paper", "verb": "cuts" },
+            { "winner": "scissors", "loser": "sponge", "verb": "cuts" },
+            { "winner": "fire", "loser": "paper", "verb": "burns" },
+            { "winner": "fire", "loser": "rock", "verb": "heats" },
+            { "winner": "water", "loser": "rock", "verb": "erodes" },
+            { "winner": "water", "loser": "fire", "verb": "extinguishes" },
+            { "winner": "air", "loser": "sponge", "verb": "blows" },
+            { "winner": "air", "loser": "fire", "verb": "feeds" },
+            { "winner": "lightning", "loser": "water", "verb": "electrifies" },
+            { "winner": "lightning", "loser": "rock", "verb": "burns" },
+            { "winner": "sponge", "loser": "water", "verb": "absorbs" },
+            { "winner": "sponge", "loser": "rock", "verb": "cleans" },
+            { "winner": "gun", "loser": "air", "verb": "shoots" },
+            { "winner": "gun", "loser": "fire", "verb": "creates" }
+        ]
+    },
+    "elemental13": {
+        "name": "RPS-13: Elemental",
+        "types": {
+            "ROCK": "🪨",
+            "PAPER": "📄",
+            "SCISSORS": "✂️",
+            "FIRE": "🔥",
+            "WATER": "💧",
+            "AIR": "💨",
+            "LIGHTNING": "⚡",
+            "ICE": "🧊",
+            "TORNADO": "🌪️",
+            "LAVA": "🌋",
+            "PLANT": "🌱",
+            "RADIATION": "☢️",
+            "VOID": "🌑"
+        },
+        "colors": {
+            "ROCK": "#6b7280",
+            "PAPER": "#e5e7eb",
+            "SCISSORS": "#9ca3af",
+            "FIRE": "#ef4444",
+            "WATER": "#3b82f6",
+            "AIR": "#9ca3af",
+            "LIGHTNING": "#f59e0b",
+            "ICE": "#3b82f6",
+            "TORNADO": "#9ca3af",
+            "LAVA": "#ef4444",
+            "PLANT": "#10b981",
+            "RADIATION": "#10b981",
+            "VOID": "#6b7280"
+        },
+        "rules": [
+            { "winner": "rock", "loser": "scissors", "verb": "crushes" },
+            { "winner": "paper", "loser": "rock", "verb": "covers" },
+            { "winner": "scissors", "loser": "paper", "verb": "cuts" },
+            { "winner": "fire", "loser": "paper", "verb": "burns" },
+            { "winner": "fire", "loser": "ice", "verb": "melts" },
+            { "winner": "water", "loser": "fire", "verb": "extinguishes" },
+            { "winner": "water", "loser": "rock", "verb": "erodes" },
+            { "winner": "air", "loser": "fire", "verb": "blows out" },
+            { "winner": "air", "loser": "water", "verb": "evaporates" },
+            { "winner": "lightning", "loser": "air", "verb": "charges" },
+            { "winner": "lightning", "loser": "water", "verb": "electrifies" },
+            { "winner": "ice", "loser": "water", "verb": "freezes" },
+            { "winner": "ice", "loser": "plant", "verb": "freezes" },
+            { "winner": "tornado", "loser": "paper", "verb": "shreds" },
+            { "winner": "tornado", "loser": "air", "verb": "intensifies" },
+            { "winner": "lava", "loser": "rock", "verb": "melts" },
+            { "winner": "lava", "loser": "ice", "verb": "melts" },
+            { "winner": "plant", "loser": "rock", "verb": "breaks through" },
+            { "winner": "plant", "loser": "water", "verb": "absorbs" },
+            { "winner": "radiation", "loser": "plant", "verb": "mutates" },
+            { "winner": "radiation", "loser": "human", "verb": "sickens" },
+            { "winner": "void", "loser": "radiation", "verb": "absorbs" },
+            { "winner": "void", "loser": "lightning", "verb": "consumes" }
+        ]
+    },
+    "pokemon": {
+        "name": "Pokémon Type RPS",
+        "description": "Based on Pokémon type advantages (simplified for demonstration)",
+        "types": {
+            "NORMAL": "👊",
+            "FIRE": "🔥",
+            "WATER": "💧",
+            "ELECTRIC": "⚡",
+            "GRASS": "🌿",
+            "ICE": "🧊",
+            "FIGHTING": "👊",
+            "POISON": "☠️",
+            "GROUND": "🌍"
+        },
+        "colors": {
+            "NORMAL": "#9ca3af",
+            "FIRE": "#ef4444",
+            "WATER": "#3b82f6",
+            "ELECTRIC": "#f59e0b",
+            "GRASS": "#10b981",
+            "ICE": "#3b82f6",
+            "FIGHTING": "#b45309",
+            "POISON": "#8b5cf6",
+            "GROUND": "#b45309"
+        },
+        "rules": [
+            { "winner": "fighting", "loser": "normal", "verb": "hits super effective" },
+            { "winner": "water", "loser": "fire", "verb": "douses" },
+            { "winner": "ground", "loser": "fire", "verb": "smothers" },
+            { "winner": "fire", "loser": "grass", "verb": "burns" },
+            { "winner": "fire", "loser": "ice", "verb": "melts" },
+            { "winner": "electric", "loser": "water", "verb": "shocks" },
+            { "winner": "grass", "loser": "water", "verb": "absorbs" },
+            { "winner": "grass", "loser": "ground", "verb": "roots in" },
+            { "winner": "ice", "loser": "grass", "verb": "freezes" },
+            { "winner": "poison", "loser": "grass", "verb": "infects" },
+            { "winner": "ground", "loser": "electric", "verb": "grounds" },
+            { "winner": "fighting", "loser": "ice", "verb": "breaks" },
+            { "winner": "poison", "loser": "fighting", "verb": "weakens" },
+            { "winner": "ground", "loser": "poison", "verb": "filters" }
+        ]
+    }
+} 
